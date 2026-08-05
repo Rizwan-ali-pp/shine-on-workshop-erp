@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum JobStatus {
+  RECEIVED
+  INSPECTING
+  ESTIMATE_PREPARED
+  WAITING_APPROVAL
+  APPROVED
+  IN_PROGRESS
+  READY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+}
+
+enum PaymentType {
+  ADVANCE
+  PARTIAL
+  FINAL
+}
+
+enum PhotoType {
+  BEFORE
+  DURING
+  AFTER
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String   @unique
+  isActive  Boolean  @default(true)
+
+  vehicles  Vehicle[]
+  jobCards  JobCard[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Vehicle {
+  id                 String   @id @default(uuid())
+
+  customerId         String
+  customer           Customer @relation(fields: [customerId], references: [id])
+
+  registrationNumber String   @unique
+  brand              String
+  model              String
+
+  jobCards           JobCard[]
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Service {
+  id         String   @id @default(uuid())
+  name       String
+  category   String
+  isActive   Boolean  @default(true)
+
+  jobServices JobCardService[]
+}
+
+model JobCard {
+  id                  String   @id @default(uuid())
+
+  jobNumber           String   @unique
+
+  customerId          String
+  customer            Customer @relation(fields: [customerId], references: [id])
+
+  vehicleId           String
+  vehicle             Vehicle @relation(fields: [vehicleId], references: [id])
+
+  status              JobStatus
+
+  notes               String?
+
+  receivedAt          DateTime @default(now())
+  expectedDeliveryAt  DateTime?
+  deliveredAt         DateTime?
+
+  services            JobCardService[]
+  payments            Payment[]
+  expenses            Expense[]
+  photos              Photo[]
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model JobCardService {
+  id          String @id @default(uuid())
+
+  jobCardId   String
+  jobCard     JobCard @relation(fields: [jobCardId], references: [id], onDelete: Cascade)
+
+  serviceId   String
+  service     Service @relation(fields: [serviceId], references: [id])
+
+  price       Float
+
+  notes       String?
+}
+
+model Payment {
+  id          String @id @default(uuid())
+
+  jobCardId   String
+  jobCard     JobCard @relation(fields: [jobCardId], references: [id], onDelete: Cascade)
+
+  amount      Float
+
+  method      PaymentMethod
+
+  type        PaymentType
+
+  notes       String?
+
+  createdAt   DateTime @default(now())
+}
+
+model Expense {
+  id          String @id @default(uuid())
+
+  jobCardId   String
+  jobCard     JobCard @relation(fields: [jobCardId], references: [id], onDelete: Cascade)
+
+  category    String
+
+  amount      Float
+
+  description String?
+
+  createdAt   DateTime @default(now())
+}
+
+model Photo {
+  id          String @id @default(uuid())
+
+  jobCardId   String
+  jobCard     JobCard @relation(fields: [jobCardId], references: [id], onDelete: Cascade)
+
+  imageUrl    String
+
+  type        PhotoType
+
+  createdAt   DateTime @default(now())
+}
