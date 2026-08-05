@@ -43,7 +43,7 @@ model Customer {
   isActive  Boolean  @default(true)
 
   vehicles  Vehicle[]
-  jobCards  JobCard[]
+  jobs      Job[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -59,68 +59,89 @@ model Vehicle {
   brand              String
   model              String
 
-  jobCards           JobCard[]
+  jobs               Job[]
 
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  @@index([customerId])
 }
 
 model Service {
-  id         String   @id @default(uuid())
-  name       String
-  category   String
-  isActive   Boolean  @default(true)
+  id           String   @id @default(uuid())
 
-  jobServices JobCardService[]
+  name         String   @unique
+  category     String
+  description  String?
+
+  displayOrder Int      @default(0)
+
+  isActive     Boolean  @default(true)
+
+  jobServices  JobService[]
+
+  createdAt    DateTime @default(now())
+
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
-model JobCard {
-  id                  String   @id @default(uuid())
+model Job {
+  id                 String   @id @default(uuid())
 
-  jobNumber           String   @unique
+  jobNumber          String   @unique
 
-  customerId          String
-  customer            Customer @relation(fields: [customerId], references: [id])
+  customerId         String
+  customer           Customer @relation(fields: [customerId], references: [id])
 
-  vehicleId           String
-  vehicle             Vehicle @relation(fields: [vehicleId], references: [id])
+  vehicleId          String
+  vehicle            Vehicle @relation(fields: [vehicleId], references: [id])
 
-  status              JobStatus
+  status             JobStatus
 
-  notes               String?
+  estimatedTotal     Float
 
-  receivedAt          DateTime @default(now())
-  expectedDeliveryAt  DateTime?
-  deliveredAt         DateTime?
+  advanceAmount      Float    @default(0)
 
-  services            JobCardService[]
-  payments            Payment[]
-  expenses            Expense[]
-  photos              Photo[]
+  expenseAmount      Float    @default(0)
 
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  notes              String?
+
+  receivedAt         DateTime @default(now())
+  expectedDeliveryAt DateTime?
+  deliveredAt        DateTime?
+
+  services           JobService[]
+  payments           Payment[]
+  expenses           Expense[]
+  photos             Photo[]
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([customerId])
+  @@index([vehicleId])
+  @@index([status])
 }
 
-model JobCardService {
-  id          String @id @default(uuid())
+model JobService {
+  id           String @id @default(uuid())
 
-  jobCardId   String
-  jobCard     JobCard @relation(fields: [jobCardId], references: [id], onDelete: Cascade)
+  jobId        String
+  job          Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
-  serviceId   String
-  service     Service @relation(fields: [serviceId], references: [id])
+  serviceId    String
+  service      Service @relation(fields: [serviceId], references: [id])
 
-  price       Float
+  quotedPrice  Float
 
-  notes       String?
+  notes        String?
 }
 
 model Payment {
   id          String @id @default(uuid())
 
-  jobCardId   String
-  jobCard     JobCard @relation(fields: [jobCardId], references: [id], onDelete: Cascade)
+  jobId       String
+  job         Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   amount      Float
 
@@ -136,8 +157,8 @@ model Payment {
 model Expense {
   id          String @id @default(uuid())
 
-  jobCardId   String
-  jobCard     JobCard @relation(fields: [jobCardId], references: [id], onDelete: Cascade)
+  jobId       String
+  job         Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   category    String
 
@@ -145,18 +166,22 @@ model Expense {
 
   description String?
 
+  paidTo      String?
+
   createdAt   DateTime @default(now())
 }
 
 model Photo {
   id          String @id @default(uuid())
 
-  jobCardId   String
-  jobCard     JobCard @relation(fields: [jobCardId], references: [id], onDelete: Cascade)
+  jobId       String
+  job         Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
 
   imageUrl    String
 
   type        PhotoType
+
+  caption     String?
 
   createdAt   DateTime @default(now())
 }
