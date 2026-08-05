@@ -37,3 +37,23 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    const customers = await customerService.findAll();
+
+    return NextResponse.json(customers, {
+      status: 200,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message:
+          error instanceof Error ? error.message : "Something went wrong.",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
