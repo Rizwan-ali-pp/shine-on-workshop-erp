@@ -1,17 +1,21 @@
 import { CustomerRepository } from "./repository";
+import { CreateCustomerDTO } from "./schema";
 
 export class CustomerService {
-  constructor(private readonly customerRepository = new CustomerRepository()) {}
+  constructor(
+    private readonly customerRepository = new CustomerRepository()
+  ) {}
 
-  async create(name: string, phone: string) {
-    const existingCustomer =
-      await this.customerRepository.findByPhone(phone);
+  async create(data: CreateCustomerDTO) {
+    const existingCustomer = await this.customerRepository.findByPhone(
+      data.phone
+    );
 
     if (existingCustomer) {
       throw new Error("Customer with this phone number already exists.");
     }
 
-    return this.customerRepository.create(name, phone);
+    return this.customerRepository.create(data.name, data.phone);
   }
 
   async findAll() {

@@ -1,3 +1,5 @@
+import { ZodError } from "zod";
+import { createCustomerSchema } from "@/features/customers/schema";
 import { NextRequest, NextResponse } from "next/server";
 import { CustomerService } from "@/features/customers/service";
 
@@ -7,25 +9,26 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { name, phone } = body;
+    const data = createCustomerSchema.parse(body);
 
-    if (!name || !phone) {
-      return NextResponse.json(
-        {
-          message: "Name and phone are required.",
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    const customer = await customerService.create(name, phone);
+    const customer = await customerService.create(data);
 
     return NextResponse.json(customer, {
       status: 201,
     });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return NextResponse.json(
+        {
+          message: "Validation failed",
+          errors: error.flatten().fieldErrors,
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
     return NextResponse.json(
       {
         message:
@@ -33,7 +36,7 @@ export async function POST(request: NextRequest) {
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }
@@ -53,7 +56,7 @@ export async function GET() {
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }
