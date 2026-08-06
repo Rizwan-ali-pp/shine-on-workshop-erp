@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   LayoutDashboard,
   Users,
@@ -10,25 +11,25 @@ import {
 } from "lucide-react";
 
 const menuItems = [
-  { name: "Dashboard", icon: LayoutDashboard },
-  { name: "Customers", icon: Users },
-  { name: "Vehicles", icon: Car },
-  { name: "Jobs", icon: BriefcaseBusiness },
-  { name: "Services", icon: Wrench },
-  { name: "Payments", icon: CreditCard },
-  { name: "Expenses", icon: Receipt },
-  { name: "Settings", icon: Settings },
+  { name: "Dashboard", icon: LayoutDashboard, href: "/" },
+  { name: "Customers", icon: Users, href: "/customers" },
+  { name: "Vehicles", icon: Car, href: "/vehicles" },
+  { name: "Jobs", icon: BriefcaseBusiness, href: "/jobs" },
+  { name: "Services", icon: Wrench, href: "/services" },
+  { name: "Payments", icon: CreditCard, href: "/payments" },
+  { name: "Expenses", icon: Receipt, href: "/expenses" },
+  { name: "Settings", icon: Settings, href: "/settings" },
 ];
 
 export default function Sidebar() {
   return (
-    <aside className="w-64 h-screen bg-slate-900 text-white flex flex-col">
-      <div className="p-6 border-b border-slate-800">
+    <aside className="flex h-screen w-64 flex-col bg-slate-900 text-white">
+      <div className="border-b border-slate-800 p-6">
         <h1 className="text-2xl font-bold text-blue-400">
           ShineTrack
         </h1>
 
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="mt-1 text-sm text-slate-400">
           Workshop ERP
         </p>
       </div>
@@ -40,23 +41,23 @@ export default function Sidebar() {
 
             return (
               <li key={item.name}>
-                <button
+                <Link
+                  href={item.href}
                   className="
-                    w-full
                     flex
+                    w-full
                     items-center
                     gap-3
+                    rounded-lg
                     px-4
                     py-3
-                    rounded-lg
-                    hover:bg-slate-800
                     transition
+                    hover:bg-slate-800
                   "
                 >
                   <Icon size={20} />
-
                   <span>{item.name}</span>
-                </button>
+                </Link>
               </li>
             );
           })}

@@ -1,4 +1,7 @@
 import AppLayout from "@/components/layout/AppLayout";
+import StatCard from "@/components/ui/StatCard";
+import { getDashboardStats } from "@/services/dashboard";
+
 import {
   BriefcaseBusiness,
   Users,
@@ -6,9 +9,9 @@ import {
   IndianRupee,
 } from "lucide-react";
 
-import  StatCard  from "@/components/ui/StatCard";
+export default async function HomePage() {
+  const stats = await getDashboardStats();
 
-export default function HomePage() {
   return (
     <AppLayout>
       <h1 className="text-4xl font-bold">
@@ -22,25 +25,25 @@ export default function HomePage() {
       <div className="grid grid-cols-4 gap-6">
         <StatCard
           title="Total Jobs"
-          value="18"
+          value={stats.totalJobs}
           icon={BriefcaseBusiness}
         />
 
         <StatCard
           title="Customers"
-          value="25"
+          value={stats.totalCustomers}
           icon={Users}
         />
 
         <StatCard
           title="Vehicles"
-          value="31"
+          value={stats.totalVehicles}
           icon={Car}
         />
 
         <StatCard
           title="Revenue"
-          value="₹1.25L"
+          value={`₹${stats.revenue}`}
           icon={IndianRupee}
         />
       </div>
