@@ -21,9 +21,24 @@ export const createJobSchema = z.object({
         quotedPrice: z.number().positive(),
 
         notes: z.string().trim().optional(),
-      })
+      }),
     )
     .min(1, "At least one service is required."),
 });
 
+export const updateJobSchema = z.object({
+  status: z.enum([
+    "RECEIVED",
+    "INSPECTING",
+    "ESTIMATE_PREPARED",
+    "WAITING_APPROVAL",
+    "APPROVED",
+    "IN_PROGRESS",
+    "READY",
+    "DELIVERED",
+    "CANCELLED",
+  ]),
+});
+
+export type UpdateJobDTO = z.infer<typeof updateJobSchema>;
 export type CreateJobDTO = z.infer<typeof createJobSchema>;

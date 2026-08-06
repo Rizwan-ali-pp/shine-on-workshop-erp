@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { CreateJobDTO } from "./schema";
+import { CreateJobDTO, UpdateJobDTO } from "./schema";
 
 export class JobRepository {
   async create(data: CreateJobDTO, jobNumber: string) {
@@ -44,6 +44,64 @@ export class JobRepository {
       }
 
       return job;
+    });
+  }
+  async findAll() {
+    return prisma.job.findMany({
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+          },
+        },
+        vehicle: {
+          select: {
+            id: true,
+            registrationNumber: true,
+            brand: true,
+            model: true,
+          },
+        },
+      },
+      orderBy: {
+        receivedAt: "desc",
+      },
+    });
+  }
+  async findById(id: string) {
+    return prisma.job.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        customer: true,
+
+        vehicle: true,
+
+        services: {
+          include: {
+            service: true,
+          },
+        },
+
+        payments: true,
+
+        expenses: true,
+
+        photos: true,
+      },
+    });
+  }
+  async updateStatus(id: string, status: UpdateJobDTO["status"]) {
+    return prisma.job.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+      },
     });
   }
 }
