@@ -41,9 +41,27 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const customers = await customerService.findAll();
+    const searchParams = request.nextUrl.searchParams;
+    const q = searchParams.get("q") || undefined;
+    const page = searchParams.get("page")
+      ? parseInt(searchParams.get("page")!)
+      : undefined;
+    const limit = searchParams.get("limit")
+      ? parseInt(searchParams.get("limit")!)
+      : undefined;
+    const sortBy = searchParams.get("sortBy") || undefined;
+    const sortOrder =
+      (searchParams.get("sortOrder") as "asc" | "desc") || undefined;
+
+    const customers = await customerService.findAll({
+      q,
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+    });
 
     return NextResponse.json(customers, {
       status: 200,

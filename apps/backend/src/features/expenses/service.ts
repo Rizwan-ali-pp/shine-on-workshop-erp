@@ -17,4 +17,25 @@ export class ExpenseService {
 
     return this.expenseRepository.create(data);
   }
+
+  async findAll(params?: {
+    q?: string;
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+  }) {
+    const limit = params?.limit || 10;
+    const page = params?.page || 1;
+
+    const { data, total } = await this.expenseRepository.findAll(params);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
 }

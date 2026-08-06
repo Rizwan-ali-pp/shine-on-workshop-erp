@@ -19,5 +19,7 @@ export const createServiceSchema = z.object({
     .optional(),
 });
 
-export type CreateServiceDTO =
-  z.infer<typeof createServiceSchema>;
+export type CreateServiceDTO = z.infer<typeof createServiceSchema>;
+
+export const updateServiceSchema = createServiceSchema.partial();
+export type UpdateServiceDTO = z.infer<typeof updateServiceSchema>;

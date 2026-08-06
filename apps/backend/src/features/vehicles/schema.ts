@@ -22,5 +22,7 @@ export const createVehicleSchema = z.object({
     .max(50),
 });
 
-export type CreateVehicleDTO =
-  z.infer<typeof createVehicleSchema>;
+export type CreateVehicleDTO = z.infer<typeof createVehicleSchema>;
+
+export const updateVehicleSchema = createVehicleSchema.partial();
+export type UpdateVehicleDTO = z.infer<typeof updateVehicleSchema>;

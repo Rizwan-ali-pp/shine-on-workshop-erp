@@ -44,24 +44,29 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const searchParams = request.nextUrl.searchParams;
+    const q = searchParams.get("q") || undefined;
+    const page = searchParams.get("page")
+      ? parseInt(searchParams.get("page")!)
+      : undefined;
+    const limit = searchParams.get("limit")
+      ? parseInt(searchParams.get("limit")!)
+      : undefined;
+    const sortBy = searchParams.get("sortBy") || undefined;
+    const sortOrder =
+      (searchParams.get("sortOrder") as "asc" | "desc") || undefined;
 
-    const customerId = searchParams.get("customerId");
+    const vehicles = await vehicleService.findAll({
+      q,
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+    });
 
-    if (!customerId) {
-      return NextResponse.json(
-        {
-          message: "customerId is required.",
-        },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    const vehicles = await vehicleService.findByCustomer(customerId);
-
-    return NextResponse.json(vehicles);
+    return NextResponse.json(vehicles, {
+      status: 200,
+    });
   } catch (error) {
     return NextResponse.json(
       {

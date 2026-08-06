@@ -46,29 +46,60 @@ export class JobRepository {
       return job;
     });
   }
-  async findAll() {
-    return prisma.job.findMany({
-      include: {
-        customer: {
-          select: {
-            id: true,
-            name: true,
-            phone: true,
+  async findAll(params?: {
+    q?: string;
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+  }) {
+    const {
+      q,
+      page = 1,
+      limit = 10,
+      sortBy = "receivedAt",
+      sortOrder = "desc",
+    } = params || {};
+
+    const where = q
+      ? {
+          OR: [
+            { jobNumber: { contains: q, mode: "insensitive" as const } },
+            {
+              customer: {
+                name: { contains: q, mode: "insensitive" as const },
+              },
+            },
+            {
+              vehicle: {
+                registrationNumber: { contains: q, mode: "insensitive" as const },
+              },
+            },
+          ],
+        }
+      : {};
+
+    const [data, total] = await Promise.all([
+      prisma.job.findMany({
+        where,
+        include: {
+          customer: {
+            select: { id: true, name: true, phone: true },
+          },
+          vehicle: {
+            select: { id: true, registrationNumber: true, brand: true, model: true },
           },
         },
-        vehicle: {
-          select: {
-            id: true,
-            registrationNumber: true,
-            brand: true,
-            model: true,
-          },
+        orderBy: {
+          [sortBy]: sortOrder,
         },
-      },
-      orderBy: {
-        receivedAt: "desc",
-      },
-    });
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.job.count({ where }),
+    ]);
+
+    return { data, total };
   }
   async findById(id: string) {
     return prisma.job.findUnique({

@@ -14,3 +14,6 @@ export const createCustomerSchema = z.object({
 });
 
 export type CreateCustomerDTO = z.infer<typeof createCustomerSchema>;
+
+export const updateCustomerSchema = createCustomerSchema.partial();
+export type UpdateCustomerDTO = z.infer<typeof updateCustomerSchema>;

@@ -12,8 +12,25 @@ export class JobService {
     return this.jobRepository.create(data, jobNumber);
   }
 
-  async findAll() {
-    return this.jobRepository.findAll();
+  async findAll(params?: {
+    q?: string;
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+  }) {
+    const limit = params?.limit || 10;
+    const page = params?.page || 1;
+
+    const { data, total } = await this.jobRepository.findAll(params);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findById(id: string) {

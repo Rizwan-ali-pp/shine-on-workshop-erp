@@ -1,5 +1,5 @@
 import { ServiceRepository } from "./repository";
-import { CreateServiceDTO } from "./schema";
+import { CreateServiceDTO, UpdateServiceDTO } from "./schema";
 
 export class ServiceService {
   constructor(
@@ -16,7 +16,42 @@ export class ServiceService {
     return this.serviceRepository.create(data);
   }
 
-  async findAll() {
-    return this.serviceRepository.findAll();
+  async findById(id: string) {
+    return this.serviceRepository.findById(id);
+  }
+
+  async findAll(params?: {
+    q?: string;
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+  }) {
+    const limit = params?.limit || 10;
+    const page = params?.page || 1;
+
+    const { data, total } = await this.serviceRepository.findAll(params);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async update(id: string, data: UpdateServiceDTO) {
+    if (data.name) {
+      const existing = await this.serviceRepository.findByName(data.name);
+      if (existing && existing.id !== id) {
+        throw new Error("Service with this name already exists.");
+      }
+    }
+    return this.serviceRepository.update(id, data);
+  }
+
+  async deactivate(id: string) {
+    return this.serviceRepository.deactivate(id);
   }
 }

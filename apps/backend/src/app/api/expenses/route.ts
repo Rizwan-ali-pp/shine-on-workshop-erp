@@ -31,3 +31,29 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function GET(req: NextRequest) {
+  try {
+    const searchParams = req.nextUrl.searchParams;
+    const q = searchParams.get("q") || undefined;
+    const page = searchParams.get("page") ? parseInt(searchParams.get("page")!) : undefined;
+    const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit")!) : undefined;
+    const sortBy = searchParams.get("sortBy") || undefined;
+    const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || undefined;
+
+    const expenses = await expenseService.findAll({
+      q,
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+    });
+
+    return NextResponse.json(expenses, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: error instanceof Error ? error.message : "Something went wrong." },
+      { status: 500 }
+    );
+  }
+}
