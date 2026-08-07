@@ -6,7 +6,6 @@ import { useDebounce } from "@/hooks/useDebounce";
 import PaymentToolbar from "./PaymentToolbar";
 import PaymentSearch from "./PaymentSearch";
 import PaymentTable from "./PaymentTable";
-import PaymentDialog from "./PaymentDialog";
 import PaginationControls from "@/components/ui/PaginationControls";
 
 export default function PaymentClient() {
@@ -16,8 +15,6 @@ export default function PaymentClient() {
   const [limit, setLimit] = useState(10);
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-
-  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
 
   const { data, isLoading, isError, refetch } = usePayments({
     q: debouncedSearch,
@@ -42,14 +39,10 @@ export default function PaymentClient() {
     setPage(1);
   };
 
-  const handleAdd = () => {
-    setIsPaymentDialogOpen(true);
-  };
-
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <PaymentToolbar onAdd={handleAdd} />
+        <PaymentToolbar />
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -82,11 +75,6 @@ export default function PaymentClient() {
           </div>
         )}
       </div>
-
-      <PaymentDialog
-        isOpen={isPaymentDialogOpen}
-        onOpenChange={setIsPaymentDialogOpen}
-      />
     </div>
   );
 }

@@ -19,7 +19,6 @@ interface JobTableProps {
   sortBy: string;
   sortOrder: "asc" | "desc";
   onSort: (field: string) => void;
-  onUpdateStatus: (job: Job) => void;
   onRetry?: () => void;
 }
 
@@ -52,7 +51,6 @@ export default function JobTable({
   sortBy,
   sortOrder,
   onSort,
-  onUpdateStatus,
   onRetry,
 }: JobTableProps) {
   const renderSortIcon = (field: string) => {
