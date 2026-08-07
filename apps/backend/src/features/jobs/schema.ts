@@ -1,9 +1,11 @@
 import { z } from "zod";
 
 export const createJobSchema = z.object({
-  customerId: z.string().uuid(),
-
-  vehicleId: z.string().uuid(),
+  customerName: z.string().min(1, "Customer name is required"),
+  customerPhone: z.string().min(10, "Phone number must be at least 10 digits"),
+  vehicleRegistration: z.string().min(1, "Vehicle registration is required"),
+  vehicleBrand: z.string().optional(),
+  vehicleModel: z.string().optional(),
 
   estimatedTotal: z.number().positive(),
 

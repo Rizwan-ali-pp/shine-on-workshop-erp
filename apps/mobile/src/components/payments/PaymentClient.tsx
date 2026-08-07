@@ -7,7 +7,7 @@ import PaymentToolbar from "./PaymentToolbar";
 import PaymentSearch from "./PaymentSearch";
 import PaymentTable from "./PaymentTable";
 import PaymentDialog from "./PaymentDialog";
-import PaginationControls from "../customers/PaginationControls";
+import PaginationControls from "@/components/ui/PaginationControls";
 
 export default function PaymentClient() {
   const [search, setSearch] = useState("");

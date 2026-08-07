@@ -12,11 +12,10 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import Logo from "@/components/ui/Logo";
 
 const menuItems = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/" },
-  { name: "Customers", icon: Users, href: "/customers" },
-  { name: "Vehicles", icon: Car, href: "/vehicles" },
   { name: "Jobs", icon: BriefcaseBusiness, href: "/jobs" },
   { name: "Services", icon: Wrench, href: "/services" },
   { name: "Payments", icon: CreditCard, href: "/payments" },
@@ -28,14 +27,9 @@ export default function Sidebar() {
 
   return (
     <aside className="flex w-full md:w-64 md:h-screen flex-col md:flex-col bg-slate-900 text-white shrink-0">
-      <div className="flex items-center justify-between border-b border-slate-800 p-4 md:p-6">
-        <div>
-          <h1 className="text-xl md:text-2xl font-bold text-orange-500">
-            ShineTrack
-          </h1>
-          <p className="hidden md:block mt-1 text-sm text-slate-400">
-            Workshop ERP
-          </p>
+      <div className="flex items-center justify-between border-b border-slate-800 p-4 md:p-6 bg-black">
+        <div className="flex w-full justify-center md:justify-start">
+          <Logo className="scale-75 md:scale-100 origin-left" />
         </div>
         <div className="md:hidden">
           <button

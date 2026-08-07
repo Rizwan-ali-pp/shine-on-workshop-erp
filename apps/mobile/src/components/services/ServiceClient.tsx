@@ -9,7 +9,7 @@ import ServiceSearch from "./ServiceSearch";
 import ServiceTable from "./ServiceTable";
 import ServiceDialog from "./ServiceDialog";
 import DeleteServiceDialog from "./DeleteServiceDialog";
-import PaginationControls from "../customers/PaginationControls"; // Reusing the pagination controls
+import PaginationControls from "@/components/ui/PaginationControls";
 
 export default function ServiceClient() {
   const [search, setSearch] = useState("");

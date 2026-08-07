@@ -4,11 +4,37 @@ import { CreateJobDTO, UpdateJobDTO } from "./schema";
 export class JobRepository {
   async create(data: CreateJobDTO, jobNumber: string) {
     return prisma.$transaction(async (tx) => {
+      // 1. Upsert Customer by Phone
+      const customer = await tx.customer.upsert({
+        where: { phone: data.customerPhone },
+        update: { name: data.customerName },
+        create: {
+          name: data.customerName,
+          phone: data.customerPhone,
+        },
+      });
+
+      // 2. Upsert Vehicle by Registration Number
+      const vehicle = await tx.vehicle.upsert({
+        where: { registrationNumber: data.vehicleRegistration },
+        update: {
+          brand: data.vehicleBrand || "Unknown",
+          model: data.vehicleModel || "Unknown",
+        },
+        create: {
+          customerId: customer.id,
+          registrationNumber: data.vehicleRegistration,
+          brand: data.vehicleBrand || "Unknown",
+          model: data.vehicleModel || "Unknown",
+        },
+      });
+
+      // 3. Create the Job
       const job = await tx.job.create({
         data: {
           jobNumber,
-          customerId: data.customerId,
-          vehicleId: data.vehicleId,
+          customerId: customer.id,
+          vehicleId: vehicle.id,
           status: "RECEIVED",
 
           estimatedTotal: data.estimatedTotal,
@@ -68,6 +94,11 @@ export class JobRepository {
             {
               customer: {
                 name: { contains: q, mode: "insensitive" as const },
+              },
+            },
+            {
+              customer: {
+                phone: { contains: q, mode: "insensitive" as const },
               },
             },
             {

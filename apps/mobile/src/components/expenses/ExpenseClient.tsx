@@ -7,7 +7,7 @@ import ExpenseToolbar from "./ExpenseToolbar";
 import ExpenseSearch from "./ExpenseSearch";
 import ExpenseTable from "./ExpenseTable";
 import ExpenseDialog from "./ExpenseDialog";
-import PaginationControls from "../customers/PaginationControls";
+import PaginationControls from "@/components/ui/PaginationControls";
 
 export default function ExpenseClient() {
   const [search, setSearch] = useState("");

@@ -108,7 +108,6 @@ export default function JobTable({
           </TableHead>
           <TableHead>Customer</TableHead>
           <TableHead>Vehicle</TableHead>
-          <TableHead>Status</TableHead>
           <TableHead
             className="cursor-pointer hover:bg-gray-50 text-right"
             onClick={() => onSort("estimatedTotal")}
@@ -153,15 +152,6 @@ export default function JobTable({
                 {job.vehicle?.brand} {job.vehicle?.model}
               </div>
             </TableCell>
-            <TableCell>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                  job.status
-                )}`}
-              >
-                {job.status.replace(/_/g, " ")}
-              </span>
-            </TableCell>
             <TableCell className="text-right font-medium">
               ₹{job.estimatedTotal.toLocaleString()}
             </TableCell>
@@ -173,14 +163,6 @@ export default function JobTable({
             </TableCell>
             <TableCell className="text-right">
               <div className="flex justify-end gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onUpdateStatus(job)}
-                  title="Update Status"
-                >
-                  <FileEdit className="h-4 w-4" />
-                </Button>
                 <Link
                   href={`/jobs/${job.id}`}
                   title="View Details"

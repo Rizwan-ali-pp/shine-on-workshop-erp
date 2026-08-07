@@ -12,8 +12,11 @@ export async function getJob(id: string): Promise<Job> {
 }
 
 export async function createJob(jobData: {
-  customerId: string;
-  vehicleId: string;
+  customerName: string;
+  customerPhone: string;
+  vehicleRegistration: string;
+  vehicleBrand?: string;
+  vehicleModel?: string;
   estimatedTotal: number;
   advanceAmount: number;
   notes?: string;

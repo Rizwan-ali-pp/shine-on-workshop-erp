@@ -3,8 +3,6 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateJob } from "@/hooks/useJobs";
-import { useCustomers } from "@/hooks/useCustomers";
-import { useVehicles } from "@/hooks/useVehicles";
 import { useServices } from "@/hooks/useServices";
 import {
   Dialog,
@@ -18,8 +16,11 @@ import { Button } from "@/components/ui/Button";
 import { Plus, Trash2 } from "lucide-react";
 
 const jobSchema = z.object({
-  customerId: z.string().uuid("Please select a customer"),
-  vehicleId: z.string().uuid("Please select a vehicle"),
+  customerName: z.string().min(1, "Customer name is required"),
+  customerPhone: z.string().min(10, "Phone number must be at least 10 digits"),
+  vehicleRegistration: z.string().min(1, "Vehicle registration is required"),
+  vehicleBrand: z.string().optional(),
+  vehicleModel: z.string().optional(),
   advanceAmount: z.number().min(0),
   notes: z.string().optional(),
   services: z
@@ -44,8 +45,6 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const { data: customersData } = useCustomers({ limit: 100, sortBy: "name", sortOrder: "asc" });
-  const { data: vehiclesData } = useVehicles({ limit: 100 });
   const { data: servicesData } = useServices({ limit: 100, sortBy: "name", sortOrder: "asc" });
 
   const { mutateAsync: createJob } = useCreateJob();
@@ -60,8 +59,11 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
   } = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
-      customerId: "",
-      vehicleId: "",
+      customerName: "",
+      customerPhone: "",
+      vehicleRegistration: "",
+      vehicleBrand: "",
+      vehicleModel: "",
       advanceAmount: 0,
       notes: "",
       services: [{ serviceId: "", quotedPrice: 0, notes: "" }],
@@ -73,7 +75,6 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
     name: "services",
   });
 
-  const watchCustomerId = watch("customerId");
   const watchServices = watch("services");
 
   // Calculate estimated total based on dynamic services
@@ -81,18 +82,15 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
     return watchServices.reduce((sum, s) => sum + (Number(s.quotedPrice) || 0), 0);
   }, [watchServices]);
 
-  // Filter vehicles belonging to the selected customer
-  const filteredVehicles = useMemo(() => {
-    if (!watchCustomerId || !vehiclesData?.data) return [];
-    return vehiclesData.data.filter((v: any) => v.customerId === watchCustomerId);
-  }, [watchCustomerId, vehiclesData]);
-
   useEffect(() => {
     if (isOpen) {
       setSubmitError(null);
       reset({
-        customerId: "",
-        vehicleId: "",
+        customerName: "",
+        customerPhone: "",
+        vehicleRegistration: "",
+        vehicleBrand: "",
+        vehicleModel: "",
         advanceAmount: 0,
         notes: "",
         services: [{ serviceId: "", quotedPrice: 0, notes: "" }],
@@ -133,45 +131,68 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
         )}
 
         <form id="job-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-2">
-          {/* Top Section: Customer & Vehicle */}
+          {/* Top Section: Customer */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Customer</label>
-              <select
-                {...register("customerId")}
+              <label className="text-sm font-medium text-foreground">Customer Name *</label>
+              <input
+                type="text"
+                placeholder="e.g. John Doe"
+                {...register("customerName")}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <option value="">Select a Customer</option>
-                {customersData?.data.map((c: any) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name} ({c.phone})
-                  </option>
-                ))}
-              </select>
-              {errors.customerId && (
-                <p className="text-sm text-red-500">{errors.customerId.message}</p>
+              />
+              {errors.customerName && (
+                <p className="text-sm text-red-500">{errors.customerName.message}</p>
               )}
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Vehicle</label>
-              <select
-                {...register("vehicleId")}
-                disabled={!watchCustomerId}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
-              >
-                <option value="">
-                  {watchCustomerId ? "Select a Vehicle" : "Select Customer First"}
-                </option>
-                {filteredVehicles.map((v: any) => (
-                  <option key={v.id} value={v.id}>
-                    {v.registrationNumber} - {v.brand} {v.model}
-                  </option>
-                ))}
-              </select>
-              {errors.vehicleId && (
-                <p className="text-sm text-red-500">{errors.vehicleId.message}</p>
+              <label className="text-sm font-medium text-foreground">Phone Number *</label>
+              <input
+                type="text"
+                placeholder="e.g. 9876543210"
+                {...register("customerPhone")}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              {errors.customerPhone && (
+                <p className="text-sm text-red-500">{errors.customerPhone.message}</p>
               )}
+            </div>
+          </div>
+
+          {/* Top Section: Vehicle */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Reg Number *</label>
+              <input
+                type="text"
+                placeholder="e.g. KL-51-AB-1234"
+                {...register("vehicleRegistration")}
+                className="flex h-10 w-full uppercase rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              {errors.vehicleRegistration && (
+                <p className="text-sm text-red-500">{errors.vehicleRegistration.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Brand (Optional)</label>
+              <input
+                type="text"
+                placeholder="e.g. Honda"
+                {...register("vehicleBrand")}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Model (Optional)</label>
+              <input
+                type="text"
+                placeholder="e.g. Civic"
+                {...register("vehicleModel")}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
             </div>
           </div>
 

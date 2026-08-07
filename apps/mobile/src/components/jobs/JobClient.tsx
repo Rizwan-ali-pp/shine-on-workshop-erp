@@ -8,8 +8,7 @@ import JobToolbar from "./JobToolbar";
 import JobSearch from "./JobSearch";
 import JobTable from "./JobTable";
 import JobDialog from "./JobDialog";
-import UpdateJobStatusDialog from "./UpdateJobStatusDialog";
-import PaginationControls from "../customers/PaginationControls";
+import PaginationControls from "@/components/ui/PaginationControls";
 
 export default function JobClient() {
   const [search, setSearch] = useState("");
@@ -20,7 +19,6 @@ export default function JobClient() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const [isJobDialogOpen, setIsJobDialogOpen] = useState(false);
-  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const { data, isLoading, isError, refetch } = useJobs({
@@ -50,11 +48,6 @@ export default function JobClient() {
     setIsJobDialogOpen(true);
   };
 
-  const handleUpdateStatus = (job: Job) => {
-    setSelectedJob(job);
-    setIsStatusDialogOpen(true);
-  };
-
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -73,7 +66,6 @@ export default function JobClient() {
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSort={handleSort}
-          onUpdateStatus={handleUpdateStatus}
           onRetry={() => refetch()}
         />
 
@@ -96,12 +88,6 @@ export default function JobClient() {
       <JobDialog
         isOpen={isJobDialogOpen}
         onOpenChange={setIsJobDialogOpen}
-      />
-
-      <UpdateJobStatusDialog
-        isOpen={isStatusDialogOpen}
-        onOpenChange={setIsStatusDialogOpen}
-        job={selectedJob}
       />
     </div>
   );

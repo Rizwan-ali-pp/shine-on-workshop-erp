@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { LockKeyhole } from "lucide-react";
+import Logo from "@/components/ui/Logo";
 import { Button } from "@/components/ui/Button";
 
 export default function LoginPage() {
@@ -29,12 +31,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-8 text-center bg-slate-50 border-b border-slate-100">
-          <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <LockKeyhole size={32} />
-          </div>
-          <h1 className="text-2xl font-bold text-slate-900">ShineTrack</h1>
-          <p className="text-slate-500 mt-1">Workshop ERP System</p>
+        <div className="p-8 pb-6 flex flex-col items-center justify-center bg-slate-900 border-b border-slate-800">
+          <Logo className="scale-[0.85] md:scale-100" />
         </div>
 
         <div className="p-8">
