@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createExpenseSchema = z.object({
-  jobId: z.string().uuid(),
+  jobId: z.string().uuid().optional(),
 
   category: z
     .string()

@@ -20,13 +20,13 @@ import { Plus, Trash2 } from "lucide-react";
 const jobSchema = z.object({
   customerId: z.string().uuid("Please select a customer"),
   vehicleId: z.string().uuid("Please select a vehicle"),
-  advanceAmount: z.coerce.number().min(0).default(0),
+  advanceAmount: z.number().min(0),
   notes: z.string().optional(),
   services: z
     .array(
       z.object({
         serviceId: z.string().uuid("Please select a service"),
-        quotedPrice: z.coerce.number().positive("Price must be > 0"),
+        quotedPrice: z.number().positive("Price must be > 0"),
         notes: z.string().optional(),
       })
     )
@@ -221,7 +221,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
                     <input
                       type="number"
                       placeholder="Price"
-                      {...register(`services.${index}.quotedPrice`)}
+                      {...register(`services.${index}.quotedPrice`, { valueAsNumber: true })}
                       className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     />
                     {errors.services?.[index]?.quotedPrice && (
@@ -258,7 +258,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
               </label>
               <input
                 type="number"
-                {...register("advanceAmount")}
+                {...register("advanceAmount", { valueAsNumber: true })}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
             </div>

@@ -1,11 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getJobs, createJob, updateJobStatus } from "@/services/job.service";
+import { getJobs, getJob, createJob, updateJobStatus } from "@/services/job.service";
 import { JobParams } from "@/types/job";
 
 export function useJobs(params?: JobParams) {
   return useQuery({
     queryKey: ["jobs", params],
     queryFn: () => getJobs(params),
+  });
+}
+
+export function useJob(id: string) {
+  return useQuery({
+    queryKey: ["job", id],
+    queryFn: () => getJob(id),
+    enabled: !!id,
   });
 }
 

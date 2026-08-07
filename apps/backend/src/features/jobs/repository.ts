@@ -89,6 +89,9 @@ export class JobRepository {
           vehicle: {
             select: { id: true, registrationNumber: true, brand: true, model: true },
           },
+          payments: {
+            select: { amount: true },
+          },
         },
         orderBy: {
           [sortBy]: sortOrder,
@@ -99,7 +102,12 @@ export class JobRepository {
       prisma.job.count({ where }),
     ]);
 
-    return { data, total };
+    const mappedData = data.map((job) => ({
+      ...job,
+      totalPaid: job.payments.reduce((sum, p) => sum + p.amount, 0),
+    }));
+
+    return { data: mappedData, total };
   }
   async findById(id: string) {
     return prisma.job.findUnique({

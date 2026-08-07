@@ -80,7 +80,7 @@ export default function ServiceDialog({
       if (isEditMode && service) {
         await updateService({ id: service.id, data });
       } else {
-        await createService(data);
+        await createService({ ...data, displayOrder: 0 });
       }
       onOpenChange(false);
     } catch (error: any) {

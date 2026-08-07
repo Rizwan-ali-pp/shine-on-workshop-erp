@@ -7,7 +7,7 @@ export interface ExpenseJobRelation {
 
 export interface Expense {
   id: string;
-  jobId: string;
+  jobId?: string;
   job?: ExpenseJobRelation;
   category: string;
   amount: number;

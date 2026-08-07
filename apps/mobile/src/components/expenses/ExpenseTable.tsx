@@ -116,7 +116,7 @@ export default function ExpenseTable({
                   </div>
                 </>
               ) : (
-                <span className="text-gray-400 italic">No Job</span>
+                <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-medium">Shop Expense</span>
               )}
             </TableCell>
             <TableCell className="text-right font-medium text-red-600">

@@ -6,6 +6,11 @@ export async function getJobs(params?: JobParams): Promise<JobPaginatedResponse>
   return data;
 }
 
+export async function getJob(id: string): Promise<Job> {
+  const { data } = await api.get(`/jobs/${id}`);
+  return data;
+}
+
 export async function createJob(jobData: {
   customerId: string;
   vehicleId: string;

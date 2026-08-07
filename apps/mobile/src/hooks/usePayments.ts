@@ -18,6 +18,8 @@ export function useCreatePayment() {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
       // Invalidate jobs as well since a payment affects a job's paid total
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      // Invalidate specific job if it is open in the details view
+      queryClient.invalidateQueries({ queryKey: ["job"] });
     },
   });
 }

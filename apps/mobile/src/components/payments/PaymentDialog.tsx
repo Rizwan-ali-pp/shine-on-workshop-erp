@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/Button";
 
 const paymentSchema = z.object({
   jobId: z.string().uuid("Please select a job"),
-  amount: z.coerce.number().positive("Amount must be greater than zero"),
+  amount: z.number().positive("Amount must be greater than zero"),
   method: z.enum(["CASH", "UPI", "CARD"]),
   type: z.enum(["ADVANCE", "PARTIAL", "FINAL"]),
   notes: z.string().optional(),
@@ -27,9 +27,10 @@ type PaymentFormValues = z.infer<typeof paymentSchema>;
 interface PaymentDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  defaultJobId?: string;
 }
 
-export default function PaymentDialog({ isOpen, onOpenChange }: PaymentDialogProps) {
+export default function PaymentDialog({ isOpen, onOpenChange, defaultJobId }: PaymentDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -44,7 +45,7 @@ export default function PaymentDialog({ isOpen, onOpenChange }: PaymentDialogPro
   } = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
-      jobId: "",
+      jobId: defaultJobId || "",
       amount: 0,
       method: "CASH",
       type: "PARTIAL",
@@ -56,14 +57,14 @@ export default function PaymentDialog({ isOpen, onOpenChange }: PaymentDialogPro
     if (isOpen) {
       setSubmitError(null);
       reset({
-        jobId: "",
+        jobId: defaultJobId || "",
         amount: 0,
         method: "CASH",
         type: "PARTIAL",
         notes: "",
       });
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reset, defaultJobId]);
 
   const onSubmit = async (data: PaymentFormValues) => {
     setIsSubmitting(true);
@@ -117,7 +118,7 @@ export default function PaymentDialog({ isOpen, onOpenChange }: PaymentDialogPro
             <label className="text-sm font-medium text-foreground">Amount (₹)</label>
             <input
               type="number"
-              {...register("amount")}
+              {...register("amount", { valueAsNumber: true })}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               placeholder="e.g. 5000"
             />

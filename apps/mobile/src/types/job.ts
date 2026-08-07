@@ -33,6 +33,7 @@ export interface Job {
   estimatedTotal: number;
   advanceAmount: number;
   expenseAmount: number;
+  totalPaid?: number;
   notes?: string;
   receivedAt: string;
   expectedDeliveryAt?: string;
@@ -40,6 +41,8 @@ export interface Job {
   services: JobServiceRelation[];
   createdAt: string;
   updatedAt: string;
+  payments?: any[];
+  expenses?: any[];
 }
 
 export interface JobParams {

@@ -7,7 +7,7 @@ export async function getExpenses(params?: ExpenseParams): Promise<ExpensePagina
 }
 
 export async function createExpense(expenseData: {
-  jobId: string;
+  jobId?: string;
   category: string;
   amount: number;
   description?: string;

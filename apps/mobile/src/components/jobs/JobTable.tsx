@@ -10,6 +10,7 @@ import {
 import { ArrowDown, ArrowUp, ArrowUpDown, ChevronRight, FileEdit } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import Link from "next/link";
 
 interface JobTableProps {
   data: Job[];
@@ -113,8 +114,13 @@ export default function JobTable({
             onClick={() => onSort("estimatedTotal")}
           >
             <div className="flex items-center justify-end">
-              Total
+              Est. Total
               {renderSortIcon("estimatedTotal")}
+            </div>
+          </TableHead>
+          <TableHead className="text-right">
+            <div className="flex items-center justify-end text-green-700">
+              Total Received
             </div>
           </TableHead>
           <TableHead
@@ -122,7 +128,7 @@ export default function JobTable({
             onClick={() => onSort("receivedAt")}
           >
             <div className="flex items-center justify-end">
-              Received
+              Date
               {renderSortIcon("receivedAt")}
             </div>
           </TableHead>
@@ -159,7 +165,10 @@ export default function JobTable({
             <TableCell className="text-right font-medium">
               ₹{job.estimatedTotal.toLocaleString()}
             </TableCell>
-            <TableCell className="text-right">
+            <TableCell className="text-right font-semibold text-green-700">
+              ₹{(job.totalPaid || 0).toLocaleString()}
+            </TableCell>
+            <TableCell className="text-right text-gray-500">
               {new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(job.receivedAt))}
             </TableCell>
             <TableCell className="text-right">
@@ -172,15 +181,13 @@ export default function JobTable({
                 >
                   <FileEdit className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
+                <Link
+                  href={`/jobs/${job.id}`}
                   title="View Details"
-                  className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                  onClick={() => alert("Job Details view coming soon!")}
+                  className="inline-flex items-center justify-center h-10 w-10 rounded-md text-blue-600 hover:text-blue-800 hover:bg-blue-50 transition-colors"
                 >
                   <ChevronRight className="h-4 w-4" />
-                </Button>
+                </Link>
               </div>
             </TableCell>
           </TableRow>

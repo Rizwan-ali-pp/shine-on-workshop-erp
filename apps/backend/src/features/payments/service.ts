@@ -13,18 +13,8 @@ export class PaymentService {
       throw new Error("Job not found.");
     }
 
-    const totalPaid = job.payments.reduce(
-      (sum, payment) => sum + payment.amount,
-      0
-    );
-
-    const remaining = job.estimatedTotal - totalPaid;
-
-    if (data.amount > remaining) {
-      throw new Error(
-        `Payment exceeds remaining balance. Remaining amount is ₹${remaining}.`
-      );
-    }
+    // Removed strict check for data.amount > remaining to allow for open-ended advances
+    // where the final estimated total is not yet known.
 
     return this.paymentRepository.create(data);
   }
