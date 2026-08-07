@@ -37,7 +37,7 @@ const getMethodBadgeVariant = (method: string) => {
 const getTypeColor = (type: string) => {
   switch (type) {
     case "ADVANCE":
-      return "text-blue-600 bg-blue-50";
+      return "text-orange-600 bg-orange-50";
     case "PARTIAL":
       return "text-yellow-600 bg-yellow-50";
     case "FINAL":

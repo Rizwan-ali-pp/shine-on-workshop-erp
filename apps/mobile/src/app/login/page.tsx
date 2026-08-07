@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="p-8 text-center bg-slate-50 border-b border-slate-100">
-          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <LockKeyhole size={32} />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">ShineTrack</h1>
@@ -47,7 +47,7 @@ export default function LoginPage() {
                 type="password"
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                className="w-full text-center tracking-[1em] font-mono text-2xl h-14 rounded-lg border-2 border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none transition-all"
+                className="w-full text-center tracking-[1em] font-mono text-2xl h-14 rounded-lg border-2 border-slate-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all"
                 placeholder="••••"
                 maxLength={8}
                 autoFocus

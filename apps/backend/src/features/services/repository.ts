@@ -45,6 +45,7 @@ export class ServiceRepository {
     } = params || {};
 
     const where: Prisma.ServiceWhereInput = {
+      isActive: true,
       ...(q
         ? {
             OR: [
@@ -78,9 +79,20 @@ export class ServiceRepository {
   }
 
   async deactivate(id: string) {
-    return prisma.service.update({
-      where: { id },
-      data: { isActive: false },
-    });
+    try {
+      // Attempt a physical hard delete first
+      return await prisma.service.delete({
+        where: { id },
+      });
+    } catch (error) {
+      // If a foreign key constraint fails (e.g. used in a past Job), fallback to soft delete
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+        return await prisma.service.update({
+          where: { id },
+          data: { isActive: false },
+        });
+      }
+      throw error;
+    }
   }
 }
