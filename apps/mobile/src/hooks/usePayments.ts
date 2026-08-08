@@ -20,6 +20,7 @@ export function useCreatePayment() {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
       // Invalidate specific job if it is open in the details view
       queryClient.invalidateQueries({ queryKey: ["job"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboardStats"] });
     },
   });
 }

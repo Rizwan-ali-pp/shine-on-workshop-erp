@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateJob } from "@/hooks/useJobs";
@@ -75,12 +75,15 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
     name: "services",
   });
 
-  const watchServices = watch("services");
+  const servicesValues = useWatch({
+    control,
+    name: "services",
+  });
 
   // Calculate estimated total based on dynamic services
   const estimatedTotal = useMemo(() => {
-    return watchServices.reduce((sum, s) => sum + (Number(s.quotedPrice) || 0), 0);
-  }, [watchServices]);
+    return (servicesValues || []).reduce((sum, s) => sum + (Number(s?.quotedPrice) || 0), 0);
+  }, [servicesValues]);
 
   useEffect(() => {
     if (isOpen) {

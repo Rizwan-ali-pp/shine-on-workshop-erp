@@ -24,6 +24,7 @@ export function useCreateJob() {
     mutationFn: createJob,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboardStats"] });
     },
   });
 }
@@ -35,6 +36,7 @@ export function useUpdateJobStatus() {
     mutationFn: updateJobStatus,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboardStats"] });
     },
   });
 }
