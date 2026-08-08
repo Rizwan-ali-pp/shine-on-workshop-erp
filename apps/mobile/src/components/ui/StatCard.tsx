@@ -22,7 +22,7 @@ export default function StatCard({
           </p>
         </div>
 
-        <h2 className="text-3xl font-bold text-slate-900">
+        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 truncate" title={String(value)}>
           {value}
         </h2>
       </CardContent>

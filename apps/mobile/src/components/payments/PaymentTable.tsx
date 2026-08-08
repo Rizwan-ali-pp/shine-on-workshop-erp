@@ -95,72 +95,111 @@ export default function PaymentTable({
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Job & Customer</TableHead>
-          <TableHead
-            className="cursor-pointer hover:bg-gray-50 text-right"
-            onClick={() => onSort("amount")}
-          >
-            <div className="flex items-center justify-end">
-              Amount
-              {renderSortIcon("amount")}
-            </div>
-          </TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead
-            className="cursor-pointer hover:bg-gray-50 text-right"
-            onClick={() => onSort("createdAt")}
-          >
-            <div className="flex items-center justify-end">
-              Date
-              {renderSortIcon("createdAt")}
-            </div>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <>
+      {/* Mobile Card View */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
         {data.map((payment) => (
-          <TableRow key={payment.id}>
-            <TableCell>
-              <div className="font-semibold text-primary">
-                {payment.job?.jobNumber}
+          <div
+            key={payment.id}
+            className="flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm p-4"
+          >
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <span className="font-bold text-slate-900">{payment.job?.jobNumber}</span>
+                <p className="text-sm text-slate-500 mt-1">{payment.job?.customer?.name}</p>
               </div>
-              <div className="text-xs text-muted-foreground">
-                {payment.job?.customer?.name}
+              <div className="text-right">
+                <span className="text-xs text-slate-500 font-medium">
+                  {new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).format(new Date(payment.createdAt))}
+                </span>
+                <p className="text-sm font-bold text-green-700 mt-1">
+                  ₹{payment.amount.toLocaleString()}
+                </p>
               </div>
-            </TableCell>
-            <TableCell className="text-right font-medium text-green-700">
-              ₹{payment.amount.toLocaleString()}
-            </TableCell>
-            <TableCell>
+            </div>
+            
+            <div className="flex justify-between items-center pt-3 border-t border-slate-100">
               <Badge variant={getMethodBadgeVariant(payment.method) as any}>
                 {payment.method}
               </Badge>
-            </TableCell>
-            <TableCell>
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(
-                  payment.type
-                )}`}
-              >
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(payment.type)}`}>
                 {payment.type}
               </span>
-            </TableCell>
-            <TableCell className="text-right">
-              {new Intl.DateTimeFormat("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              }).format(new Date(payment.createdAt))}
-            </TableCell>
-          </TableRow>
+            </div>
+          </div>
         ))}
-      </TableBody>
-    </Table>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Job & Customer</TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-slate-50 text-right"
+                onClick={() => onSort("amount")}
+              >
+                <div className="flex items-center justify-end">
+                  Amount
+                  {renderSortIcon("amount")}
+                </div>
+              </TableHead>
+              <TableHead>Method</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-slate-50 text-right"
+                onClick={() => onSort("createdAt")}
+              >
+                <div className="flex items-center justify-end">
+                  Date
+                  {renderSortIcon("createdAt")}
+                </div>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((payment) => (
+              <TableRow key={payment.id}>
+                <TableCell>
+                  <div className="font-semibold text-slate-900">
+                    {payment.job?.jobNumber}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {payment.job?.customer?.name}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right font-bold text-green-700">
+                  ₹{payment.amount.toLocaleString()}
+                </TableCell>
+                <TableCell>
+                  <Badge variant={getMethodBadgeVariant(payment.method) as any}>
+                    {payment.method}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(
+                      payment.type
+                    )}`}
+                  >
+                    {payment.type}
+                  </span>
+                </TableCell>
+                <TableCell className="text-right text-slate-500">
+                  {new Intl.DateTimeFormat("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }).format(new Date(payment.createdAt))}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }

@@ -119,7 +119,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[700px] sm:max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Create New Job</DialogTitle>
           <DialogDescription>

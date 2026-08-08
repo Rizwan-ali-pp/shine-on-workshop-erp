@@ -92,87 +92,130 @@ export default function JobTable({
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead
-            className="cursor-pointer hover:bg-gray-50"
-            onClick={() => onSort("jobNumber")}
-          >
-            <div className="flex items-center">
-              Job #
-              {renderSortIcon("jobNumber")}
-            </div>
-          </TableHead>
-          <TableHead>Customer</TableHead>
-          <TableHead>Vehicle</TableHead>
-          <TableHead
-            className="cursor-pointer hover:bg-gray-50 text-right"
-            onClick={() => onSort("estimatedTotal")}
-          >
-            <div className="flex items-center justify-end">
-              Est. Total
-              {renderSortIcon("estimatedTotal")}
-            </div>
-          </TableHead>
-          <TableHead className="text-right">
-            <div className="flex items-center justify-end text-green-700">
-              Total Received
-            </div>
-          </TableHead>
-          <TableHead
-            className="cursor-pointer hover:bg-gray-50 text-right"
-            onClick={() => onSort("receivedAt")}
-          >
-            <div className="flex items-center justify-end">
-              Date
-              {renderSortIcon("receivedAt")}
-            </div>
-          </TableHead>
-          <TableHead className="text-right">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <>
+      {/* Mobile Card View */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
         {data.map((job) => (
-          <TableRow key={job.id}>
-            <TableCell className="font-semibold text-primary">
-              {job.jobNumber}
-            </TableCell>
-            <TableCell>
-              <div>{job.customer?.name}</div>
-              <div className="text-xs text-muted-foreground">
-                {job.customer?.phone}
+          <Link
+            key={job.id}
+            href={`/jobs/${job.id}`}
+            className="flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm p-4 hover:shadow-md transition-shadow"
+          >
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <span className="font-bold text-orange-600">{job.jobNumber}</span>
+                <p className="font-medium text-slate-900 mt-1">{job.customer?.name}</p>
+                <p className="text-xs text-slate-500">{job.customer?.phone}</p>
               </div>
-            </TableCell>
-            <TableCell>
-              <div>{job.vehicle?.registrationNumber}</div>
-              <div className="text-xs text-muted-foreground">
-                {job.vehicle?.brand} {job.vehicle?.model}
+              <div className="text-right">
+                <span className="text-xs text-slate-500 font-medium">
+                  {new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).format(new Date(job.receivedAt))}
+                </span>
+                <p className="text-sm font-semibold text-slate-900 mt-1">
+                  ₹{job.estimatedTotal.toLocaleString()}
+                </p>
               </div>
-            </TableCell>
-            <TableCell className="text-right font-medium">
-              ₹{job.estimatedTotal.toLocaleString()}
-            </TableCell>
-            <TableCell className="text-right font-semibold text-green-700">
-              ₹{(job.totalPaid || 0).toLocaleString()}
-            </TableCell>
-            <TableCell className="text-right text-gray-500">
-              {new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(job.receivedAt))}
-            </TableCell>
-            <TableCell className="text-right">
-              <div className="flex justify-end gap-2">
-                <Link
-                  href={`/jobs/${job.id}`}
-                  title="View Details"
-                  className="inline-flex items-center justify-center h-10 w-10 rounded-md text-orange-600 hover:text-orange-800 hover:bg-orange-50 transition-colors"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
+            </div>
+            
+            <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div>
+                <p className="text-sm text-slate-700">{job.vehicle?.registrationNumber}</p>
+                <p className="text-xs text-slate-500">{job.vehicle?.brand} {job.vehicle?.model}</p>
               </div>
-            </TableCell>
-          </TableRow>
+              <div className="text-right">
+                <p className="text-xs text-slate-500">Paid</p>
+                <p className="text-sm font-bold text-green-600">₹{(job.totalPaid || 0).toLocaleString()}</p>
+              </div>
+            </div>
+          </Link>
         ))}
-      </TableBody>
-    </Table>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead
+                className="cursor-pointer hover:bg-slate-50"
+                onClick={() => onSort("jobNumber")}
+              >
+                <div className="flex items-center">
+                  Job #
+                  {renderSortIcon("jobNumber")}
+                </div>
+              </TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead>Vehicle</TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-slate-50 text-right"
+                onClick={() => onSort("estimatedTotal")}
+              >
+                <div className="flex items-center justify-end">
+                  Est. Total
+                  {renderSortIcon("estimatedTotal")}
+                </div>
+              </TableHead>
+              <TableHead className="text-right">
+                <div className="flex items-center justify-end text-green-700">
+                  Total Received
+                </div>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-slate-50 text-right"
+                onClick={() => onSort("receivedAt")}
+              >
+                <div className="flex items-center justify-end">
+                  Date
+                  {renderSortIcon("receivedAt")}
+                </div>
+              </TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((job) => (
+              <TableRow key={job.id}>
+                <TableCell className="font-semibold text-orange-600">
+                  {job.jobNumber}
+                </TableCell>
+                <TableCell>
+                  <div className="font-medium text-slate-900">{job.customer?.name}</div>
+                  <div className="text-xs text-slate-500">
+                    {job.customer?.phone}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="font-medium text-slate-700">{job.vehicle?.registrationNumber}</div>
+                  <div className="text-xs text-slate-500">
+                    {job.vehicle?.brand} {job.vehicle?.model}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right font-medium">
+                  ₹{job.estimatedTotal.toLocaleString()}
+                </TableCell>
+                <TableCell className="text-right font-semibold text-green-700">
+                  ₹{(job.totalPaid || 0).toLocaleString()}
+                </TableCell>
+                <TableCell className="text-right text-slate-500">
+                  {new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(job.receivedAt))}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Link
+                      href={`/jobs/${job.id}`}
+                      title="View Details"
+                      className="inline-flex items-center justify-center h-8 w-8 rounded-md text-orange-600 hover:text-orange-800 hover:bg-orange-50 transition-colors"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }

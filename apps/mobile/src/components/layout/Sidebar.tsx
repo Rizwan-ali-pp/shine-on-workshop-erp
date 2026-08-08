@@ -22,33 +22,24 @@ const menuItems = [
   { name: "Expenses", icon: Receipt, href: "/expenses" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onLinkClick }: { onLinkClick?: () => void }) {
   const { logout } = useAuth();
 
   return (
-    <aside className="flex w-full md:w-64 md:h-screen flex-col md:flex-col bg-slate-900 text-white shrink-0">
-      <div className="flex items-center justify-between border-b border-slate-800 p-4 md:p-6 bg-black">
-        <div className="flex w-full justify-center md:justify-start">
-          <Logo className="scale-75 md:scale-100 origin-left" />
-        </div>
-        <div className="md:hidden">
-          <button
-            onClick={() => logout()}
-            className="flex items-center justify-center p-2 rounded-lg hover:bg-red-900/30 text-red-400"
-          >
-            <LogOut size={20} />
-          </button>
-        </div>
+    <aside className="flex w-64 h-full md:h-screen flex-col bg-black text-white shrink-0">
+      <div className="flex items-center justify-center border-b border-slate-800 p-4 md:p-6 bg-black">
+        <Logo className="scale-75 md:scale-100 origin-center md:origin-left" />
       </div>
 
-      <nav className="flex-1 overflow-x-auto md:overflow-y-auto p-2 md:p-4">
-        <ul className="flex md:flex-col gap-2">
+      <nav className="flex-1 overflow-y-auto p-4">
+        <ul className="flex flex-col gap-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
               <li key={item.name} className="shrink-0">
                 <Link
                   href={item.href}
+                  onClick={onLinkClick}
                   className="flex w-full items-center gap-2 md:gap-3 rounded-lg px-3 md:px-4 py-2 md:py-3 transition hover:bg-slate-800"
                 >
                   <Icon size={20} />
@@ -60,7 +51,7 @@ export default function Sidebar() {
         </ul>
       </nav>
 
-      <div className="hidden md:block border-t border-slate-800 p-4">
+      <div className="border-t border-slate-800 p-4">
         <button
           onClick={() => logout()}
           className="flex w-full items-center gap-3 rounded-lg px-4 py-3 transition hover:bg-red-900/30 text-red-400 hover:text-red-300"

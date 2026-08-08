@@ -68,87 +68,137 @@ export default function ExpenseTable({
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Job & Customer</TableHead>
-          <TableHead
-            className="cursor-pointer hover:bg-gray-50 text-right"
-            onClick={() => onSort("amount")}
-          >
-            <div className="flex items-center justify-end">
-              Amount
-              {renderSortIcon("amount")}
-            </div>
-          </TableHead>
-          <TableHead
-            className="cursor-pointer hover:bg-gray-50"
-            onClick={() => onSort("category")}
-          >
-            <div className="flex items-center">
-              Category
-              {renderSortIcon("category")}
-            </div>
-          </TableHead>
-          <TableHead>Details</TableHead>
-          <TableHead
-            className="cursor-pointer hover:bg-gray-50 text-right"
-            onClick={() => onSort("createdAt")}
-          >
-            <div className="flex items-center justify-end">
-              Date
-              {renderSortIcon("createdAt")}
-            </div>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <>
+      {/* Mobile Card View */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
         {data.map((expense) => (
-          <TableRow key={expense.id}>
-            <TableCell>
-              {expense.job ? (
-                <>
-                  <div className="font-semibold text-primary">
-                    {expense.job.jobNumber}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {expense.job.customer?.name}
-                  </div>
-                </>
-              ) : (
-                <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-medium">Shop Expense</span>
-              )}
-            </TableCell>
-            <TableCell className="text-right font-medium text-red-600">
-              ₹{expense.amount.toLocaleString()}
-            </TableCell>
-            <TableCell>
-              <span className="px-2 py-1 bg-gray-100 rounded-md text-sm font-medium">
+          <div
+            key={expense.id}
+            className="flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm p-4"
+          >
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                {expense.job ? (
+                  <>
+                    <span className="font-bold text-slate-900">{expense.job.jobNumber}</span>
+                    <p className="text-sm text-slate-500 mt-1">{expense.job.customer?.name}</p>
+                  </>
+                ) : (
+                  <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-medium">Shop Expense</span>
+                )}
+              </div>
+              <div className="text-right">
+                <span className="text-xs text-slate-500 font-medium">
+                  {new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).format(new Date(expense.createdAt))}
+                </span>
+                <p className="text-sm font-bold text-red-600 mt-1">
+                  ₹{expense.amount.toLocaleString()}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded-md text-xs font-medium">
                 {expense.category}
               </span>
-            </TableCell>
-            <TableCell>
-              <div className="text-sm font-medium">
-                {expense.paidTo || "N/A"}
+              <div className="text-right flex-1 ml-4 truncate">
+                <p className="text-sm font-medium text-slate-900 truncate">{expense.paidTo || "N/A"}</p>
+                {expense.description && (
+                  <p className="text-xs text-slate-500 truncate" title={expense.description}>
+                    {expense.description}
+                  </p>
+                )}
               </div>
-              {expense.description && (
-                <div className="text-xs text-muted-foreground truncate max-w-[200px]" title={expense.description}>
-                  {expense.description}
-                </div>
-              )}
-            </TableCell>
-            <TableCell className="text-right">
-              {new Intl.DateTimeFormat("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              }).format(new Date(expense.createdAt))}
-            </TableCell>
-          </TableRow>
+            </div>
+          </div>
         ))}
-      </TableBody>
-    </Table>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Job & Customer</TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-slate-50 text-right"
+                onClick={() => onSort("amount")}
+              >
+                <div className="flex items-center justify-end">
+                  Amount
+                  {renderSortIcon("amount")}
+                </div>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-slate-50"
+                onClick={() => onSort("category")}
+              >
+                <div className="flex items-center">
+                  Category
+                  {renderSortIcon("category")}
+                </div>
+              </TableHead>
+              <TableHead>Details</TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-slate-50 text-right"
+                onClick={() => onSort("createdAt")}
+              >
+                <div className="flex items-center justify-end">
+                  Date
+                  {renderSortIcon("createdAt")}
+                </div>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((expense) => (
+              <TableRow key={expense.id}>
+                <TableCell>
+                  {expense.job ? (
+                    <>
+                      <div className="font-semibold text-slate-900">
+                        {expense.job.jobNumber}
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {expense.job.customer?.name}
+                      </div>
+                    </>
+                  ) : (
+                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-medium">Shop Expense</span>
+                  )}
+                </TableCell>
+                <TableCell className="text-right font-bold text-red-600">
+                  ₹{expense.amount.toLocaleString()}
+                </TableCell>
+                <TableCell>
+                  <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded-md text-sm font-medium">
+                    {expense.category}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm font-medium text-slate-900">
+                    {expense.paidTo || "N/A"}
+                  </div>
+                  {expense.description && (
+                    <div className="text-xs text-slate-500 truncate max-w-[200px]" title={expense.description}>
+                      {expense.description}
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell className="text-right text-slate-500">
+                  {new Intl.DateTimeFormat("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }).format(new Date(expense.createdAt))}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
