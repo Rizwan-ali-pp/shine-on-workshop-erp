@@ -146,6 +146,7 @@ export default function ExpenseDialog({ isOpen, onOpenChange, defaultJobId }: Ex
                 {...register("amount", { valueAsNumber: true })}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 placeholder="e.g. 1500"
+                onFocus={(e) => e.target.select()}
               />
               {errors.amount && <p className="text-sm text-red-500">{errors.amount.message}</p>}
             </div>
