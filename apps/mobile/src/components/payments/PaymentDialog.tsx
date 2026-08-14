@@ -46,7 +46,7 @@ export default function PaymentDialog({ isOpen, onOpenChange, defaultJobId }: Pa
     resolver: zodResolver(paymentSchema),
     defaultValues: {
       jobId: defaultJobId || "",
-      amount: 0,
+      amount: "" as unknown as number,
       method: "CASH",
       type: "PARTIAL",
       notes: "",
@@ -58,7 +58,7 @@ export default function PaymentDialog({ isOpen, onOpenChange, defaultJobId }: Pa
       setSubmitError(null);
       reset({
         jobId: defaultJobId || "",
-        amount: 0,
+        amount: "" as unknown as number,
         method: "CASH",
         type: "PARTIAL",
         notes: "",
@@ -120,8 +120,7 @@ export default function PaymentDialog({ isOpen, onOpenChange, defaultJobId }: Pa
               type="number"
               {...register("amount", { valueAsNumber: true })}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              placeholder="e.g. 5000"
-              onFocus={(e) => e.target.select()}
+              placeholder="0"
             />
             {errors.amount && <p className="text-sm text-red-500">{errors.amount.message}</p>}
           </div>

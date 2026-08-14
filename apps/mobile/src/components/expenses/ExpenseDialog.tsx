@@ -73,7 +73,7 @@ export default function ExpenseDialog({ isOpen, onOpenChange, defaultJobId }: Ex
       setSubmitError("Please select a job for a job expense.");
       return;
     }
-    
+
     setIsSubmitting(true);
     setSubmitError(null);
     try {
@@ -107,9 +107,9 @@ export default function ExpenseDialog({ isOpen, onOpenChange, defaultJobId }: Ex
         )}
 
         <div className="flex items-center gap-2 mb-2">
-          <input 
-            type="checkbox" 
-            id="isShopExpense" 
+          <input
+            type="checkbox"
+            id="isShopExpense"
             checked={isShopExpense}
             onChange={(e) => setIsShopExpense(e.target.checked)}
             className="rounded border-gray-300 text-primary focus:ring-primary"
@@ -150,7 +150,7 @@ export default function ExpenseDialog({ isOpen, onOpenChange, defaultJobId }: Ex
               />
               {errors.amount && <p className="text-sm text-red-500">{errors.amount.message}</p>}
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Category</label>
               <input

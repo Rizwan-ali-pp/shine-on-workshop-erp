@@ -214,7 +214,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
                 Add Service
               </Button>
             </div>
-            
+
             {errors.services?.root && (
               <p className="text-sm text-red-500">{errors.services.root.message}</p>
             )}
@@ -240,14 +240,13 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
                       </p>
                     )}
                   </div>
-                  
+
                   <div className="w-28 space-y-1">
                     <input
                       type="number"
-                      placeholder="Price"
+                      placeholder="0"
                       {...register(`services.${index}.quotedPrice`, { valueAsNumber: true })}
                       className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      onFocus={(e) => e.target.select()}
                     />
                     {errors.services?.[index]?.quotedPrice && (
                       <p className="text-xs text-red-500">
@@ -269,7 +268,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
                 </div>
               ))}
             </div>
-            
+
             <div className="flex justify-end pt-2 border-t text-sm font-semibold">
               Estimated Total: ₹{estimatedTotal.toLocaleString()}
             </div>
@@ -285,7 +284,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
                 type="number"
                 {...register("advanceAmount", { valueAsNumber: true })}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onFocus={(e) => e.target.select()}
+                placeholder="0"
               />
             </div>
             <div className="space-y-2">
