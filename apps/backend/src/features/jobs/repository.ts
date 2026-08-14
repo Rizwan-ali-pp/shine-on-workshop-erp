@@ -174,4 +174,11 @@ export class JobRepository {
       },
     });
   }
+  async delete(id: string) {
+    return prisma.job.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

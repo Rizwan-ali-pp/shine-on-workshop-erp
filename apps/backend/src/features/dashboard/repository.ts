@@ -12,7 +12,13 @@ export class DashboardRepository {
       recentExpenses,
     ] = await Promise.all([
       prisma.job.count(),
-      prisma.customer.count(),
+      prisma.customer.count({
+        where: {
+          jobs: {
+            some: {},
+          },
+        },
+      }),
       prisma.vehicle.count(),
       prisma.payment.aggregate({ _sum: { amount: true } }),
       prisma.expense.aggregate({ _sum: { amount: true } }),

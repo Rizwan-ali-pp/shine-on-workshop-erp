@@ -36,3 +36,7 @@ export async function updateJobStatus({
   const { data } = await api.patch(`/jobs/${id}`, { status });
   return data;
 }
+
+export async function deleteJob(id: string): Promise<void> {
+  await api.delete(`/jobs/${id}`);
+}

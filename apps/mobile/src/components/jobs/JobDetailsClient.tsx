@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useJob } from "@/hooks/useJobs";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { ArrowLeft, DollarSign, Receipt, TrendingUp, TrendingDown, Plus } from "lucide-react";
+import { ArrowLeft, DollarSign, Receipt, TrendingUp, TrendingDown, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import PaymentDialog from "../payments/PaymentDialog";
 import ExpenseDialog from "../expenses/ExpenseDialog";
+import DeleteJobDialog from "./DeleteJobDialog";
 
 interface JobDetailsClientProps {
   jobId: string;
@@ -17,6 +19,8 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
   const { data: job, isLoading, isError } = useJob(jobId);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const router = useRouter();
 
   if (isLoading) {
     return <div className="p-8 text-center animate-pulse text-gray-500">Loading Job Financials...</div>;
@@ -53,6 +57,13 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
           </div>
         </div>
         <div className="flex gap-3">
+          <Button
+            onClick={() => setIsDeleteDialogOpen(true)}
+            variant="outline"
+            className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
           <Button onClick={() => setIsExpenseOpen(true)} variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700">
             <Plus className="h-4 w-4 mr-2" /> Log Expense
           </Button>
@@ -183,6 +194,13 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
 
       <PaymentDialog isOpen={isPaymentOpen} onOpenChange={setIsPaymentOpen} defaultJobId={jobId} />
       <ExpenseDialog isOpen={isExpenseOpen} onOpenChange={setIsExpenseOpen} defaultJobId={jobId} />
+      <DeleteJobDialog 
+        isOpen={isDeleteDialogOpen} 
+        onOpenChange={setIsDeleteDialogOpen} 
+        jobId={jobId} 
+        jobNumber={job?.jobNumber || ""} 
+        onSuccess={() => router.push("/jobs")} 
+      />
     </div>
   );
 }

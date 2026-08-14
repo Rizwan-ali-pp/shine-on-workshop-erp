@@ -40,4 +40,8 @@ export class JobService {
   async updateStatus(id: string, data: UpdateJobDTO) {
     return this.jobRepository.updateStatus(id, data.status);
   }
+
+  async delete(id: string) {
+    return this.jobRepository.delete(id);
+  }
 }

@@ -4,7 +4,7 @@ import { prisma } from './src/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 async function main() {
-  const defaultPin = '1234';
+  const defaultPin = '2004';
   const salt = await bcrypt.genSalt(10);
   const pinHash = await bcrypt.hash(defaultPin, salt);
 

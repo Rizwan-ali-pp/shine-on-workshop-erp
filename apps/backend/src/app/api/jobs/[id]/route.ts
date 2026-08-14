@@ -57,3 +57,23 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest, { params }: RouteContext) {
+  try {
+    const { id } = await params;
+
+    await jobService.delete(id);
+
+    return NextResponse.json({ message: "Job deleted successfully." });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      {
+        message:
+          error instanceof Error ? error.message : "Internal Server Error",
+      },
+      { status: 500 },
+    );
+  }
+}
