@@ -244,7 +244,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
                   <div className="w-28 space-y-1">
                     <input
                       type="number"
-                      placeholder="0"
+                      placeholder="Price"
                       {...register(`services.${index}.quotedPrice`, { valueAsNumber: true })}
                       className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     />
@@ -284,7 +284,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
                 type="number"
                 {...register("advanceAmount", { valueAsNumber: true })}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                placeholder="0"
+                placeholder="Amount"
               />
             </div>
             <div className="space-y-2">
