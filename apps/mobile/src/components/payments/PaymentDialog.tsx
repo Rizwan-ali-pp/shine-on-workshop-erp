@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/Button";
 
 const paymentSchema = z.object({
   jobId: z.string().uuid("Please select a job"),
-  amount: z.number().positive("Amount must be greater than zero"),
+  amount: z.coerce.number().positive("Amount must be greater than zero"),
   method: z.enum(["CASH", "UPI", "CARD"]),
   type: z.enum(["ADVANCE", "PARTIAL", "FINAL"]),
   notes: z.string().optional(),
@@ -118,7 +118,7 @@ export default function PaymentDialog({ isOpen, onOpenChange, defaultJobId }: Pa
             <label className="text-sm font-medium text-foreground">Amount (₹)</label>
             <input
               type="number"
-              {...register("amount", { valueAsNumber: true })}
+              {...register("amount")}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               placeholder="Amount"
             />

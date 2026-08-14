@@ -21,13 +21,13 @@ const jobSchema = z.object({
   vehicleRegistration: z.string().min(1, "Vehicle registration is required"),
   vehicleBrand: z.string().optional(),
   vehicleModel: z.string().optional(),
-  advanceAmount: z.number().min(0),
+  advanceAmount: z.coerce.number().min(0),
   notes: z.string().optional(),
   services: z
     .array(
       z.object({
         serviceId: z.string().uuid("Please select a service"),
-        quotedPrice: z.number().positive("Price must be > 0"),
+        quotedPrice: z.coerce.number().positive("Price must be > 0"),
         notes: z.string().optional(),
       })
     )
@@ -245,7 +245,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
                     <input
                       type="number"
                       placeholder="Price"
-                      {...register(`services.${index}.quotedPrice`, { valueAsNumber: true })}
+                      {...register(`services.${index}.quotedPrice`)}
                       className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     />
                     {errors.services?.[index]?.quotedPrice && (
@@ -282,7 +282,7 @@ export default function JobDialog({ isOpen, onOpenChange }: JobDialogProps) {
               </label>
               <input
                 type="number"
-                {...register("advanceAmount", { valueAsNumber: true })}
+                {...register("advanceAmount")}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 placeholder="Amount"
               />
