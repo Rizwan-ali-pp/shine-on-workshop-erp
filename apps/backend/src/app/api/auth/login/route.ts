@@ -59,7 +59,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Login Error:", error);
     return NextResponse.json(
-      { message: "Internal Server Error", error: String(error) },
+      { message: "Internal Server Error", error: String(error), url: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 10) + "..." : "MISSING" },
       { status: 500 }
     );
   }
