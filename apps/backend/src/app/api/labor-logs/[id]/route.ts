@@ -5,10 +5,11 @@ const laborLogService = new LaborLogService();
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await laborLogService.delete(params.id);
+    const { id } = await params;
+    await laborLogService.delete(id);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error(error);

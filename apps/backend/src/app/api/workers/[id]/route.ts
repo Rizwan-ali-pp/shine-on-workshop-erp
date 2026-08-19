@@ -5,10 +5,11 @@ const workerService = new WorkerService();
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const worker = await workerService.findById(params.id);
+    const { id } = await params;
+    const worker = await workerService.findById(id);
     return NextResponse.json(worker);
   } catch (error: any) {
     console.error(error);
@@ -21,11 +22,12 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const data = await request.json();
-    const worker = await workerService.update(params.id, data);
+    const worker = await workerService.update(id, data);
     return NextResponse.json(worker);
   } catch (error) {
     console.error(error);
@@ -35,10 +37,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await workerService.delete(params.id);
+    const { id } = await params;
+    await workerService.delete(id);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error(error);
