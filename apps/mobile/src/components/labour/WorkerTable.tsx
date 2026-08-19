@@ -25,7 +25,7 @@ export default function WorkerTable({ data, onDeleteClick }: WorkerTableProps) {
     workerName: "",
   });
 
-  });
+
 
   return (
     <>
