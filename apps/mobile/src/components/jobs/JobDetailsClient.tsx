@@ -39,36 +39,37 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full pb-12">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/jobs" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-start md:items-center gap-4">
+          <Link href="/jobs" className="p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0 mt-1 md:mt-0">
             <ArrowLeft className="h-5 w-5 text-gray-600" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-primary flex items-center gap-3">
-              {job.jobNumber}
-              <Badge variant="outline" className="text-sm font-medium border-primary/20 bg-primary/5">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-primary flex flex-wrap items-center gap-2 md:gap-3">
+              <span className="break-all">{job.jobNumber}</span>
+              <Badge variant="outline" className="text-xs md:text-sm font-medium border-primary/20 bg-primary/5">
                 {job.status.replace(/_/g, " ")}
               </Badge>
             </h1>
             <p className="text-muted-foreground mt-1 text-sm">
-              {job.customer?.name} • {job.vehicle?.registrationNumber} ({job.vehicle?.brand} {job.vehicle?.model})
+              {job.customer?.name} • {job.vehicle?.registrationNumber} <br className="md:hidden" />
+              <span className="text-xs md:text-sm">({job.vehicle?.brand} {job.vehicle?.model})</span>
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-2 md:gap-3 w-full md:w-auto">
           <Button
             onClick={() => setIsDeleteDialogOpen(true)}
             variant="outline"
-            className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+            className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 px-3 md:px-4"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
-          <Button onClick={() => setIsExpenseOpen(true)} variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700">
-            <Plus className="h-4 w-4 mr-2" /> Log Expense
+          <Button onClick={() => setIsExpenseOpen(true)} variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 flex-1 md:flex-none justify-center px-2 md:px-4 text-xs md:text-sm h-10">
+            <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> Log Expense
           </Button>
-          <Button onClick={() => setIsPaymentOpen(true)} className="bg-green-600 hover:bg-green-700 text-white">
-            <Plus className="h-4 w-4 mr-2" /> Receive Payment
+          <Button onClick={() => setIsPaymentOpen(true)} className="bg-green-600 hover:bg-green-700 text-white flex-1 md:flex-none justify-center px-2 md:px-4 text-xs md:text-sm h-10">
+            <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> <span className="hidden sm:inline">Receive Payment</span><span className="sm:hidden">Payment</span>
           </Button>
         </div>
       </div>
