@@ -12,7 +12,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <main className="flex h-screen overflow-hidden">
+    <main className="flex h-[100dvh] overflow-hidden">
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div 

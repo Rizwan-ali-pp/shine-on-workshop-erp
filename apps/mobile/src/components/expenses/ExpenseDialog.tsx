@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/Button";
 
 const expenseSchema = z.object({
   jobId: z.string().optional(),
-  amount: z.coerce.number().positive("Amount must be greater than zero"),
+  amount: z.number().positive("Amount must be greater than zero"),
   category: z.string().min(2, "Category is required"),
   paidTo: z.string().optional(),
   description: z.string().optional(),
@@ -138,12 +138,12 @@ export default function ExpenseDialog({ isOpen, onOpenChange, defaultJobId }: Ex
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Amount (₹)</label>
               <input
                 type="number"
-                {...register("amount")}
+                {...register("amount", { valueAsNumber: true })}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 placeholder="e.g. 1500"
                 onFocus={(e) => e.target.select()}

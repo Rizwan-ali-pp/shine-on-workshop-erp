@@ -19,9 +19,9 @@ export default function PaginationControls({
   onLimitChange,
 }: PaginationControlsProps) {
   return (
-    <div className="flex items-center justify-between px-2">
-      <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2">
+    <div className="flex items-center justify-between px-2 w-full">
+      <div className="flex flex-wrap items-center gap-4 lg:gap-8 w-full justify-center sm:justify-between">
+        <div className="flex items-center gap-2">
           <p className="text-sm font-medium">Rows per page</p>
           <select
             className="h-8 w-[70px] rounded-md border border-input bg-transparent px-2 py-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
