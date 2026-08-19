@@ -20,6 +20,7 @@ const menuItems = [
   { name: "Services", icon: Wrench, href: "/services" },
   { name: "Payments", icon: CreditCard, href: "/payments" },
   { name: "Expenses", icon: Receipt, href: "/expenses" },
+  { name: "Labour", icon: Users, href: "/labour" },
 ];
 
 export default function Sidebar({ onLinkClick }: { onLinkClick?: () => void }) {

@@ -4,7 +4,6 @@ export class DashboardRepository {
   async getStats() {
     const [
       totalJobs,
-      totalCustomers,
       totalVehicles,
       revenueResult,
       expenseResult,
@@ -12,13 +11,6 @@ export class DashboardRepository {
       recentExpenses,
     ] = await Promise.all([
       prisma.job.count(),
-      prisma.customer.count({
-        where: {
-          jobs: {
-            some: {},
-          },
-        },
-      }),
       prisma.vehicle.count(),
       prisma.payment.aggregate({ _sum: { amount: true } }),
       prisma.expense.aggregate({ _sum: { amount: true } }),
@@ -63,7 +55,6 @@ export class DashboardRepository {
 
     return {
       totalJobs,
-      totalCustomers,
       totalVehicles,
       totalRevenue,
       totalExpenses,

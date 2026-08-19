@@ -114,6 +114,7 @@ model Job {
   payments           Payment[]
   expenses           Expense[]
   photos             Photo[]
+  laborLogs          LaborLog[]
 
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
@@ -190,6 +191,35 @@ model Admin {
   id        String   @id @default(uuid())
   username  String   @unique
   pinHash   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Worker {
+  id        String     @id @default(uuid())
+  name      String
+  phone     String?
+  isActive  Boolean    @default(true)
+  
+  laborLogs LaborLog[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model LaborLog {
+  id        String   @id @default(uuid())
+  
+  workerId  String
+  worker    Worker   @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  
+  jobId     String?
+  job       Job?     @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  
+  amount    Float
+  
+  notes     String?
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
