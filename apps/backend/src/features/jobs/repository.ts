@@ -7,7 +7,7 @@ export class JobRepository {
       // 1. Upsert Customer by Phone
       const customer = await tx.customer.upsert({
         where: { phone: data.customerPhone },
-        update: { name: data.customerName },
+        update: {},
         create: {
           name: data.customerName,
           phone: data.customerPhone,
@@ -17,10 +17,7 @@ export class JobRepository {
       // 2. Upsert Vehicle by Registration Number
       const vehicle = await tx.vehicle.upsert({
         where: { registrationNumber: data.vehicleRegistration },
-        update: {
-          brand: data.vehicleBrand || "Unknown",
-          model: data.vehicleModel || "Unknown",
-        },
+        update: {},
         create: {
           customerId: customer.id,
           registrationNumber: data.vehicleRegistration,
