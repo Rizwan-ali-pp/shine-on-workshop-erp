@@ -9,7 +9,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PaymentDialog from "../payments/PaymentDialog";
 import ExpenseDialog from "../expenses/ExpenseDialog";
+import DeleteExpenseDialog from "../expenses/DeleteExpenseDialog";
 import DeleteJobDialog from "./DeleteJobDialog";
+import { Expense } from "@/types/expense";
 
 interface JobDetailsClientProps {
   jobId: string;
@@ -20,6 +22,8 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
+  const [isDeleteExpenseOpen, setIsDeleteExpenseOpen] = useState(false);
   const router = useRouter();
 
   if (isLoading) {
@@ -171,7 +175,7 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
               <tbody className="divide-y">
                 {!job.expenses || job.expenses.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="px-4 py-8 text-center text-gray-400 italic">No expenses logged yet.</td>
+                    <td colSpan={4} className="px-4 py-8 text-center text-gray-400 italic">No expenses logged yet.</td>
                   </tr>
                 ) : (
                   job.expenses.map((e: any) => (
@@ -184,6 +188,19 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
                         <div className="text-xs text-gray-500">{e.paidTo || e.description || "N/A"}</div>
                       </td>
                       <td className="px-4 py-3 text-right font-semibold text-red-600">₹{e.amount.toLocaleString()}</td>
+                      <td className="px-4 py-3 text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setExpenseToDelete(e);
+                            setIsDeleteExpenseOpen(true);
+                          }}
+                          className="text-red-400 hover:text-red-600 hover:bg-red-50 h-8 w-8 p-0"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </td>
                     </tr>
                   ))
                 )}
@@ -195,6 +212,7 @@ export default function JobDetailsClient({ jobId }: JobDetailsClientProps) {
 
       <PaymentDialog isOpen={isPaymentOpen} onOpenChange={setIsPaymentOpen} defaultJobId={jobId} />
       <ExpenseDialog isOpen={isExpenseOpen} onOpenChange={setIsExpenseOpen} defaultJobId={jobId} />
+      <DeleteExpenseDialog isOpen={isDeleteExpenseOpen} onOpenChange={setIsDeleteExpenseOpen} expense={expenseToDelete} />
       <DeleteJobDialog 
         isOpen={isDeleteDialogOpen} 
         onOpenChange={setIsDeleteDialogOpen} 

@@ -7,7 +7,9 @@ import ExpenseToolbar from "./ExpenseToolbar";
 import ExpenseSearch from "./ExpenseSearch";
 import ExpenseTable from "./ExpenseTable";
 import ExpenseDialog from "./ExpenseDialog";
+import DeleteExpenseDialog from "./DeleteExpenseDialog";
 import PaginationControls from "@/components/ui/PaginationControls";
+import { Expense } from "@/types/expense";
 
 export default function ExpenseClient() {
   const [search, setSearch] = useState("");
@@ -18,6 +20,8 @@ export default function ExpenseClient() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const [isExpenseDialogOpen, setIsExpenseDialogOpen] = useState(false);
+  const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const { data, isLoading, isError, refetch } = useExpenses({
     q: debouncedSearch,
@@ -65,6 +69,10 @@ export default function ExpenseClient() {
           sortOrder={sortOrder}
           onSort={handleSort}
           onRetry={() => refetch()}
+          onDeleteClick={(expense) => {
+            setExpenseToDelete(expense);
+            setIsDeleteDialogOpen(true);
+          }}
         />
 
         {!isLoading && !isError && data && data.totalPages > 0 && (
@@ -86,6 +94,12 @@ export default function ExpenseClient() {
       <ExpenseDialog
         isOpen={isExpenseDialogOpen}
         onOpenChange={setIsExpenseDialogOpen}
+      />
+
+      <DeleteExpenseDialog
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        expense={expenseToDelete}
       />
     </div>
   );

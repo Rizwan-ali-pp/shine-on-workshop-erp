@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/Table";
 import { ArrowDown, ArrowUp, ArrowUpDown, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { useDeleteExpense } from "@/hooks/useExpenses";
 
 interface ExpenseTableProps {
   data: Expense[];
@@ -19,6 +18,7 @@ interface ExpenseTableProps {
   sortOrder: "asc" | "desc";
   onSort: (field: string) => void;
   onRetry?: () => void;
+  onDeleteClick: (expense: Expense) => void;
 }
 
 export default function ExpenseTable({
@@ -29,19 +29,8 @@ export default function ExpenseTable({
   sortOrder,
   onSort,
   onRetry,
+  onDeleteClick,
 }: ExpenseTableProps) {
-  const deleteExpense = useDeleteExpense();
-
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this accessory/expense?")) {
-      try {
-        await deleteExpense.mutateAsync(id);
-      } catch (error) {
-        console.error("Failed to delete expense:", error);
-      }
-    }
-  };
-
   const renderSortIcon = (field: string) => {
     if (sortBy !== field) return <ArrowUpDown className="ml-2 h-4 w-4" />;
     return sortOrder === "asc" ? (
@@ -124,7 +113,7 @@ export default function ExpenseTable({
               </div>
               <button
                 type="button"
-                onClick={() => handleDelete(expense.id)}
+                onClick={() => onDeleteClick(expense)}
                 className="ml-3 p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors shrink-0"
               >
                 <Trash2 className="w-5 h-5" />
@@ -219,7 +208,7 @@ export default function ExpenseTable({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleDelete(expense.id)}
+                    onClick={() => onDeleteClick(expense)}
                     className="text-red-400 hover:text-red-600 hover:bg-red-50 h-8 w-8 p-0"
                   >
                     <Trash2 className="h-4 w-4" />
