@@ -7,8 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { useDeleteExpense } from "@/hooks/useExpenses";
 
 interface ExpenseTableProps {
   data: Expense[];
@@ -29,6 +30,18 @@ export default function ExpenseTable({
   onSort,
   onRetry,
 }: ExpenseTableProps) {
+  const deleteExpense = useDeleteExpense();
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this accessory/expense?")) {
+      try {
+        await deleteExpense.mutateAsync(id);
+      } catch (error) {
+        console.error("Failed to delete expense:", error);
+      }
+    }
+  };
+
   const renderSortIcon = (field: string) => {
     if (sortBy !== field) return <ArrowUpDown className="ml-2 h-4 w-4" />;
     return sortOrder === "asc" ? (
@@ -109,6 +122,13 @@ export default function ExpenseTable({
                   </p>
                 )}
               </div>
+              <button
+                type="button"
+                onClick={() => handleDelete(expense.id)}
+                className="ml-3 p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors shrink-0"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
             </div>
           </div>
         ))}
@@ -148,6 +168,7 @@ export default function ExpenseTable({
                   {renderSortIcon("createdAt")}
                 </div>
               </TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -193,6 +214,16 @@ export default function ExpenseTable({
                     hour: "2-digit",
                     minute: "2-digit",
                   }).format(new Date(expense.createdAt))}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDelete(expense.id)}
+                    className="text-red-400 hover:text-red-600 hover:bg-red-50 h-8 w-8 p-0"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

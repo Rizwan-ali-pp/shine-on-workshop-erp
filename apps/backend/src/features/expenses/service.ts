@@ -17,6 +17,10 @@ export class ExpenseService {
     return this.expenseRepository.create(data);
   }
 
+  async delete(id: string) {
+    return this.expenseRepository.delete(id);
+  }
+
   async findAll(params?: {
     q?: string;
     page?: number;

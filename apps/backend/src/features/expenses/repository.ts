@@ -8,6 +8,12 @@ export class ExpenseRepository {
     });
   }
 
+  async delete(id: string) {
+    return prisma.expense.delete({
+      where: { id },
+    });
+  }
+
   async findJobById(jobId: string) {
     return prisma.job.findUnique({
       where: {
