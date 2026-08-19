@@ -130,6 +130,7 @@ export default function WorkerDetailsClient({ workerId }: WorkerDetailsClientPro
         isOpen={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         laborLog={logToDelete}
+        workerId={workerId}
       />
     </div>
   );

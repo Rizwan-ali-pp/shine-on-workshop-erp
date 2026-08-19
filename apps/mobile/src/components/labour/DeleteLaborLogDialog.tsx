@@ -14,12 +14,14 @@ interface DeleteLaborLogDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   laborLog: { id: string; amount: number } | null;
+  workerId: string;
 }
 
 export default function DeleteLaborLogDialog({
   isOpen,
   onOpenChange,
   laborLog,
+  workerId,
 }: DeleteLaborLogDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -32,7 +34,7 @@ export default function DeleteLaborLogDialog({
     setIsDeleting(true);
     setDeleteError(null);
     try {
-      await deleteLaborLog(laborLog.id);
+      await deleteLaborLog({ id: laborLog.id, workerId });
       onOpenChange(false);
     } catch (error: any) {
       setDeleteError(
