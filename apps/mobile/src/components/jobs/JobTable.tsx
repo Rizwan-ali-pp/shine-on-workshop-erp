@@ -137,10 +137,13 @@ export default function JobTable({
                     e.stopPropagation();
                     setJobToDelete({ id: job.id, jobNumber: job.jobNumber });
                   }}
-                  className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                  className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors relative z-20 pointer-events-auto"
                 >
                   <Trash2 className="w-5 h-5" />
                 </button>
+                <div className="text-slate-400 p-1 pointer-events-none">
+                  <ChevronRight className="w-5 h-5" />
+                </div>
               </div>
             </div>
           </div>
