@@ -30,15 +30,15 @@ export default function LabourLogDialog({ isOpen, onClose, workerId, workerName 
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<LaborLogFormValues>({
+  } = useForm({
     resolver: zodResolver(laborLogSchema),
     defaultValues: {
-      amount: undefined,
+      amount: "" as any,
       notes: "",
     },
   });
 
-  const onSubmit = async (data: LaborLogFormValues) => {
+  const onSubmit = async (data: any) => {
     if (!workerId) return;
     try {
       await createLog.mutateAsync({
