@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getExpenses, createExpense } from "@/services/expense.service";
+import { getExpenses, createExpense, deleteExpense } from "@/services/expense.service";
 import { ExpenseParams } from "@/types/expense";
 
 export function useExpenses(params?: ExpenseParams) {
@@ -19,6 +19,20 @@ export function useCreateExpense() {
       // Invalidate jobs as well since an expense affects a job's financials
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
       // Invalidate specific job if it is open in the details view
+      queryClient.invalidateQueries({ queryKey: ["job"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboardStats"] });
+    },
+  });
+}
+
+export function useDeleteExpense() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["jobs"] });
       queryClient.invalidateQueries({ queryKey: ["job"] });
       queryClient.invalidateQueries({ queryKey: ["dashboardStats"] });
     },
