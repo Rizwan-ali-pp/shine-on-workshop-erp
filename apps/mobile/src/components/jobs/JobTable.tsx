@@ -104,7 +104,7 @@ export default function JobTable({
             className="flex flex-col bg-white rounded-lg border border-slate-200 shadow-sm p-4 hover:shadow-md transition-shadow relative"
           >
             <Link href={`/jobs/${job.id}`} className="absolute inset-0 z-0" />
-            <div className="flex justify-between items-start mb-3 relative z-10">
+            <div className="flex justify-between items-start mb-3 relative z-10 pointer-events-none">
               <div className="pointer-events-none">
                 <span className="font-bold text-orange-600">{job.jobNumber}</span>
                 <p className="font-medium text-slate-900 mt-1">{job.customer?.name}</p>
@@ -120,7 +120,7 @@ export default function JobTable({
               </div>
             </div>
             
-            <div className="flex justify-between items-center pt-3 border-t border-slate-100 relative z-10">
+            <div className="flex justify-between items-center pt-3 border-t border-slate-100 relative z-10 pointer-events-none">
               <div className="pointer-events-none">
                 <p className="text-sm text-slate-700">{job.vehicle?.registrationNumber}</p>
                 <p className="text-xs text-slate-500">{job.vehicle?.brand} {job.vehicle?.model}</p>
