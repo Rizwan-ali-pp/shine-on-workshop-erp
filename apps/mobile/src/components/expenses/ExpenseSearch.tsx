@@ -13,7 +13,7 @@ export default function ExpenseSearch({ value, onChange }: ExpenseSearchProps) {
       <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search by Job #, Category, or Paid To..."
+        placeholder="Search by Category or Paid To..."
         className="pl-9 w-full"
       />
     </div>

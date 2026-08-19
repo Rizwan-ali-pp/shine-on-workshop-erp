@@ -57,7 +57,8 @@ export default function ExpenseDialog({ isOpen, onOpenChange, defaultJobId }: Ex
   useEffect(() => {
     if (isOpen) {
       setSubmitError(null);
-      setIsShopExpense(false);
+      const isShop = !defaultJobId;
+      setIsShopExpense(isShop);
       reset({
         jobId: defaultJobId || "",
         amount: 0,
@@ -94,9 +95,9 @@ export default function ExpenseDialog({ isOpen, onOpenChange, defaultJobId }: Ex
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Log Expense</DialogTitle>
+          <DialogTitle>{defaultJobId ? "Log Job Expense" : "Log Shop Accessory / Expense"}</DialogTitle>
           <DialogDescription>
-            Record an expense (parts, labor, external services) or a general shop expense.
+            {defaultJobId ? "Record a specific expense for this job." : "Record an item bought for the shop or a general business expense."}
           </DialogDescription>
         </DialogHeader>
 
@@ -105,17 +106,6 @@ export default function ExpenseDialog({ isOpen, onOpenChange, defaultJobId }: Ex
             {submitError}
           </div>
         )}
-
-        <div className="flex items-center gap-2 mb-2">
-          <input
-            type="checkbox"
-            id="isShopExpense"
-            checked={isShopExpense}
-            onChange={(e) => setIsShopExpense(e.target.checked)}
-            className="rounded border-gray-300 text-primary focus:ring-primary"
-          />
-          <label htmlFor="isShopExpense" className="text-sm font-medium">This is a general Shop Expense (not tied to a Job)</label>
-        </div>
 
         <form id="expense-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {!isShopExpense && (

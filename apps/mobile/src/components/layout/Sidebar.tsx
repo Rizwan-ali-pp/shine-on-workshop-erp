@@ -9,6 +9,7 @@ import {
   Wrench,
   CreditCard,
   Receipt,
+  ShoppingBag,
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -19,7 +20,7 @@ const menuItems = [
   { name: "Jobs", icon: BriefcaseBusiness, href: "/jobs" },
   { name: "Services", icon: Wrench, href: "/services" },
   { name: "Payments", icon: CreditCard, href: "/payments" },
-  { name: "Expenses", icon: Receipt, href: "/expenses" },
+  { name: "Accessories", icon: ShoppingBag, href: "/expenses" },
   { name: "Labour", icon: Users, href: "/labour" },
 ];
 
