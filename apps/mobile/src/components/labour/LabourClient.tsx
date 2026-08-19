@@ -6,10 +6,13 @@ import { Plus } from "lucide-react";
 import { useWorkers } from "@/hooks/useWorkers";
 import WorkerTable from "./WorkerTable";
 import WorkerDialog from "./WorkerDialog";
+import DeleteWorkerDialog from "./DeleteWorkerDialog";
 
 export default function LabourClient() {
   const { data: workers, isLoading, isError } = useWorkers();
   const [isWorkerDialogOpen, setIsWorkerDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [workerToDelete, setWorkerToDelete] = useState<{ id: string; name: string } | null>(null);
 
   return (
     <div className="flex flex-col gap-6 h-full pb-10">
@@ -31,11 +34,22 @@ export default function LabourClient() {
         ) : isError ? (
           <div className="bg-red-50 text-red-500 p-4 rounded-md">Failed to load workers.</div>
         ) : (
-          <WorkerTable data={workers || []} />
+          <WorkerTable
+            data={workers || []}
+            onDeleteClick={(worker) => {
+              setWorkerToDelete(worker);
+              setIsDeleteDialogOpen(true);
+            }}
+          />
         )}
       </div>
 
       <WorkerDialog isOpen={isWorkerDialogOpen} onClose={() => setIsWorkerDialogOpen(false)} />
+      <DeleteWorkerDialog
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        worker={workerToDelete}
+      />
     </div>
   );
 }

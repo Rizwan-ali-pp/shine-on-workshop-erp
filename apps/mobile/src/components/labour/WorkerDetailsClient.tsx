@@ -5,6 +5,8 @@ import { ArrowLeft, Trash2, IndianRupee, HardHat } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import DeleteLaborLogDialog from "./DeleteLaborLogDialog";
+import { useState } from "react";
 
 interface WorkerDetailsClientProps {
   workerId: string;
@@ -12,7 +14,8 @@ interface WorkerDetailsClientProps {
 
 export default function WorkerDetailsClient({ workerId }: WorkerDetailsClientProps) {
   const { data: worker, isLoading, isError } = useWorker(workerId);
-  const deleteLog = useDeleteLaborLog();
+  const [logToDelete, setLogToDelete] = useState<{ id: string; amount: number } | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   if (isLoading) {
     return <div className="p-8 text-center animate-pulse text-gray-500">Loading Worker Details...</div>;
@@ -22,17 +25,7 @@ export default function WorkerDetailsClient({ workerId }: WorkerDetailsClientPro
     return <div className="p-8 text-center text-red-500">Failed to load Worker.</div>;
   }
 
-  const totalPaid = worker.laborLogs?.reduce((sum: number, log: any) => sum + log.amount, 0) || 0;
-
-  const handleDeleteLog = async (id: string) => {
-    if (confirm("Are you sure you want to delete this labour charge?")) {
-      try {
-        await deleteLog.mutateAsync({ id, workerId });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
+  const totalPaid = worker.laborLogs?.reduce((sum: number, log: { amount: number }) => sum + log.amount, 0) || 0;
 
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full pb-12">
@@ -102,7 +95,7 @@ export default function WorkerDetailsClient({ workerId }: WorkerDetailsClientPro
                   <td colSpan={4} className="px-4 py-8 text-center text-gray-400 italic">No labour charges recorded yet.</td>
                 </tr>
               ) : (
-                worker.laborLogs.map((log: any) => (
+                worker.laborLogs.map((log: { id: string; createdAt: string | Date; notes?: string | null; amount: number; job?: { jobNumber: number } | null }) => (
                   <tr key={log.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-4 py-3 whitespace-nowrap text-gray-600">
                       {new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(log.createdAt))}
@@ -116,7 +109,10 @@ export default function WorkerDetailsClient({ workerId }: WorkerDetailsClientPro
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDeleteLog(log.id)}
+                        onClick={() => {
+                          setLogToDelete({ id: log.id, amount: log.amount });
+                          setIsDeleteDialogOpen(true);
+                        }}
                         className="text-red-400 hover:text-red-600 hover:bg-red-50 h-8 w-8 p-0"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -129,6 +125,12 @@ export default function WorkerDetailsClient({ workerId }: WorkerDetailsClientPro
           </table>
         </div>
       </div>
+      
+      <DeleteLaborLogDialog
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        laborLog={logToDelete}
+      />
     </div>
   );
 }

@@ -2,16 +2,19 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Trash2, Plus, ChevronRight, Phone } from "lucide-react";
 import Link from "next/link";
-import { useDeleteWorker } from "@/hooks/useWorkers";
 import LabourLogDialog from "./LabourLogDialog";
 
 interface WorkerTableProps {
-  data: any[];
+  data: {
+    id: string;
+    name: string;
+    phone?: string | null;
+    _count?: { laborLogs: number };
+  }[];
+  onDeleteClick: (worker: { id: string; name: string }) => void;
 }
 
-export default function WorkerTable({ data }: WorkerTableProps) {
-  const deleteWorker = useDeleteWorker();
-  
+export default function WorkerTable({ data, onDeleteClick }: WorkerTableProps) {
   const [logDialogState, setLogDialogState] = useState<{
     isOpen: boolean;
     workerId: string | null;
@@ -22,15 +25,7 @@ export default function WorkerTable({ data }: WorkerTableProps) {
     workerName: "",
   });
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this worker?")) {
-      try {
-        await deleteWorker.mutateAsync(id);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
+  });
 
   return (
     <>
@@ -72,7 +67,10 @@ export default function WorkerTable({ data }: WorkerTableProps) {
                     </Button>
                     <button
                       type="button"
-                      onClick={() => handleDelete(worker.id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onDeleteClick({ id: worker.id, name: worker.name });
+                      }}
                       className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"
                     >
                       <Trash2 className="w-5 h-5" />
@@ -127,8 +125,11 @@ export default function WorkerTable({ data }: WorkerTableProps) {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => handleDelete(worker.id)}
-                  className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors pointer-events-auto relative z-20"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onDeleteClick({ id: worker.id, name: worker.name });
+                  }}
+                  className="p-2 text-red-500 bg-red-50 hover:bg-red-100 rounded-full transition-colors shrink-0 pointer-events-auto relative z-20"
                 >
                   <Trash2 className="w-5 h-5" />
                 </button>
